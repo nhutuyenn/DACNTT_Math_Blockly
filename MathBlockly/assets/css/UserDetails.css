@@ -1,0 +1,186 @@
+
+.purple-color {
+    background-color: #5D5FEF;
+}
+
+.gray-color {
+    background-color: #A2A2A2;
+}
+.pink-color {
+    background-color: #F178B6;
+}
+
+.red-color{
+    background-color: #EF5D5D;
+}
+
+.effect-button{
+    box-shadow: 3px 5px 4px #00000042;
+}
+
+.effect-input{
+    box-shadow: 0 4px 4px #0000003d inset;
+}
+
+footer {
+    background-color: #FCDDEC;
+}
+/* +++++++++++++++++++++++++ header ++++++++++++++++++++++++++++++++ */
+
+.headerBtn button{
+    border-radius: 30px;
+    border: none;
+    padding: 6px 12px;
+    width: 120px;
+    color: white;
+}
+
+.logIn{
+    background-color: #EF5DA8;
+
+
+     
+    
+    border: none;
+}
+
+.logIn:hover{
+    background-color: #ee3f99;
+    border: none;
+}
+
+.signUp{
+    background-color: #7879F1;
+    border: none;
+}
+
+.signUp:hover{
+    background-color: #4141ee;
+    border: none;
+}
+
+.btnExperience{
+    background-color: #7879F1;
+    border-radius: 30px;
+    border: none;
+    padding: 6px 12px;
+    color: white;
+    width: 80%;
+    font-size: 25px;
+}
+
+.btnExperience:hover{
+    background-color: #4141ee;
+}
+
+.btnStartNow{
+    background-color: #7879F1;
+    border-radius: 30px;
+    border: none;
+    padding: 6px 80px;
+    color: white;
+    font-size: 25px;
+}
+
+.btnStartNow:hover{
+    background-color: #4141ee;
+}
+
+.header{
+    font-size: 50px;
+    text-align: center;
+    font-weight: bold;
+    color: #464646;
+}
+
+.content{
+    font-size: 25px;
+    font-family: 'Itim';
+}
+
+.cardHeader{
+    border: 1px solid black;
+    border-bottom: none;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.cardHeader p{
+    font-size: 30px;
+    font-family: 'Itim';
+    color: #7879F1; font-weight:
+    bold;
+}
+
+.cardContent{
+    border: 1px solid black;
+    border-bottom: none;
+    border-top: none;
+}
+
+.cardButton{
+    border: 1px solid black;
+    border-top: none;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.cardButton button{
+    background-color: #7879F1;
+    border-radius: 30px;
+    border: none;
+    padding: 6px 80px;
+    color: white;
+    margin-bottom: 50px;
+    font-size: 25px;
+}
+
+.cardButton button:hover{
+    background-color: #4141ee;
+}
+
+.managementBtn button{
+    background-color: #FCDDEC;
+    border: none;
+    width: 350px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.managementBtn button:hover{
+    background-color: #F178B6;
+    border: none;
+}
+
+.avt-uploadImg-container {
+    box-shadow: 8px 7px 13px #3f3f3f50;
+    height: 250px;
+    width: 250px;
+    border-radius: 12px;
+}
+
+.ms-7{
+    margin-left: 5rem !important;
+}
+
+.account-info-container{
+    height: 550px;
+    width: 800px;
+}
+
+.horizontal-ladder{
+    height: 1px;
+    background-color: #000000;
+}
+
+.field-value{
+    width: 420px;
+    margin-right: 120px;
+}
+
+.save-button-user-info {
+    bottom: 75px !important;
+    right: 145px !important;
+}

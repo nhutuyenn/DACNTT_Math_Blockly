@@ -1,0 +1,95 @@
+
+.purple-color {
+    background-color: #5D5FEF;
+}
+
+.gray-color {
+    background-color: #A2A2A2;
+}
+.pink-color {
+    background-color: #F178B6;
+}
+
+.red-color{
+    background-color: #EF5D5D;
+}
+
+.effect-button{
+    box-shadow: 3px 5px 4px #00000042;
+}
+
+.effect-input{
+    box-shadow: 0 4px 4px #0000003d inset;
+}
+
+footer {
+    background-color: #FCDDEC;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+
+.logo-app{
+    margin-top: 40px;
+}
+
+.launch-app{
+    background-color: #FCDDEC;
+    width: 480px;
+    height: 700px;
+    box-shadow: -84px 59px 50px #a6a6a66e;
+}
+
+.register-details{
+    width: 480px;
+    height: 700px;
+    box-shadow: -84px 59px 50px #a6a6a66e;
+    z-index: 10;
+    margin-right: -30px;
+}
+
+.register-details{
+    background-color: #A5A6F6;
+}
+
+.register-btn button{
+    width: 300px;
+    margin-top: 50px;
+    font-size: 12px !important;
+}
+
+.sign-in-btn button{
+    width: 300px;
+    margin-top: 30px;
+    font-size: 12px !important;
+}
+
+.input-container input {
+    width: 325px;
+}
+
+.input-container i {
+    top: 28%;
+    left: 18px;
+}
+
+.rules-off-apps{
+    width: 300px;
+}
+
+.rules-off-apps input {
+    left: -14px;
+    top: -2px;
+}
+
+.rules-off-apps span {
+    font-size: 13px;
+}
+
+.register-details button {
+    width: 300px;
+}
+
+.are-u-have-account {
+    font-size: 13px;
+}
