@@ -22,6 +22,12 @@
     box-shadow: 0 4px 4px #0000003d inset;
 }
 
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
 footer {
     background-color: #FCDDEC;
 }

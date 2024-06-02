@@ -57,7 +57,10 @@
     border: none;
     color: white;
     border-radius: 30px;
+    font-size: 13px;
 }
+
+
 
 .signInBtn:hover{
     background-color: #ed3c3c;
@@ -70,8 +73,43 @@
     border: none;
     color: white;
     border-radius: 30px;
+    font-size: 13px;
 }
 
 .signUpBtn:hover{
     background-color: #393cf4;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.launch-app{
+    background-color: #FCDDEC;
+    width: 480px;
+    height: 700px;
+    box-shadow: -84px 59px 50px #a6a6a66e;
+}
+
+.login-details{
+    width: 480px;
+    height: 700px;
+    box-shadow: -84px 59px 50px #a6a6a66e;
+    z-index: 10;
+    margin-right: -30px;
+}
+
+.logo-app {
+    margin-top: 40px;
+}
+
+.fw-fs{
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.effect-button{
+    box-shadow: 3px 5px 4px #00000042;
 }
