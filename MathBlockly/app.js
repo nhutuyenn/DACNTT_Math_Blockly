@@ -13,7 +13,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '..', '/Frontend')));
+app.use('/assets', express.static('assets'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(authRoutes);
@@ -24,7 +24,7 @@ app.set('views', path.join(__dirname, 'views'));
 // const dbURL = 'mongodb+srv://aceofg5:EFJsa1mzUKHLuIVi@lemathdb.wggjkbl.mongodb.net/?retryWrites=true&w=majority&appName=LeMathDB';
 
 // mongoose
-//     .connect(dbURL, 
+//     .connect(dbURL,
 //     //     {
 //     //     useNewUrlParser: true,
 //     //     useUnifiedTopology: true,
