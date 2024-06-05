@@ -20,13 +20,13 @@
             <div class="d-flex flex-row justify-content-center mt-5">
                 <div class="col-md-4 col-12 mt-1 left-login text-center py-3 launch-app">
                     <div class="col-md-12">
-                        <img src="../assets/images/Logo_LeMath.png" alt="Logo LeMath" width="200px" class="logo-app"></img>
+                        <a href="/home"><img src="../assets/images/Logo_LeMath.png" alt="Logo LeMath" width="200px" class="logo-app"></img></a>
                     </div>
                     <div class="col-md-12">
                         <img src="../assets/images/Rectangle 31.png" alt="Logo LeMath" width="80%" height="350px"></img>
                     </div>
-                    <button class="signUpBtn py-2 text-uppercase fw-medium rounded-4 border-0 mt-5 text-light"><a href="/RegisterPage" class="text-light text-decoration-none">Tạo tài khoản</a></button>
-                    <button class="signInBtn py-2 text-uppercase fw-medium rounded-4 border-0 mt-4 text-light"><a href="/LoginPage" class="text-light text-decoration-none">Đăng nhập</a></button>
+                    <button class="signUpBtn py-2 text-uppercase fw-medium rounded-4 border-0 mt-5 text-light"><a href="/register" class="text-light text-decoration-none">Tạo tài khoản</a></button>
+                    <button class="signInBtn py-2 text-uppercase fw-medium rounded-4 border-0 mt-4 text-light"><a href="/login" class="text-light text-decoration-none">Đăng nhập</a></button>
                 </div>
                 <div class="col-md-4 col-12 mt-1 right-login text-center login-details d-flex flex-column align-items-center">
                     <p class="mt-4 welcomeBack w-75 text-center">Chào mừng bạn đã trở lại</p>
@@ -77,7 +77,7 @@
                                     </div>
                                 </form>
                                 <div class="text-center mt-2">
-                                    <p>Bạn chưa có tài khoản? <a href="/RegisterPage" class="link-dark">Đăng ký</a></p>
+                                    <p>Bạn chưa có tài khoản? <a href="/register" class="link-dark">Đăng ký</a></p>
                                 </div>
 
                             </div>
@@ -137,7 +137,7 @@ form.addEventListener("submit", async (event) => {
             passwordError.textContent = data.errors.password;
         }
         if (data.user) {
-            location.assign('/HomePage');
+            location.assign('/home');
         }
 
     } catch (error) {

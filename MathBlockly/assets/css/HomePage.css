@@ -158,4 +158,9 @@
     z-index: 100;
     right: 155px;
     bottom: -25px;
+    display: none;
+}
+
+.active {
+    display: block;
 }

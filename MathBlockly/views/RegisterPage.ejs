@@ -23,8 +23,8 @@
             <section
                 class="launch-app d-flex flex-column align-items-center rounded-5">
                 <div class="logo-app">
-                    <img src="../assets/images/cover-logo.png"
-                        alt="logo-LeMath" srcset>
+                    <a href="/home"><img src="../assets/images/cover-logo.png"
+                        alt="logo-LeMath" srcset></a>
                 </div>
                 <div class="cover-img">
                     <img
@@ -151,7 +151,7 @@
                         passwordError.textContent = data.errors.password
                     }
                     if(data.user){
-                        location.assign('/HomePage')
+                        location.assign('/home')
                     }
 
                 } catch (error) {

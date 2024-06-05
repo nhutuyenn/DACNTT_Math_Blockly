@@ -46,10 +46,10 @@
                     </div>
                     <% } else { %>
                         <class class="col-3 headerBtn">
-                            <a href="/LoginPage">
+                            <a href="/login">
                                 <button class="logIn">Đăng nhập</button>
                             </a>
-                            <a href="/RegisterPage">
+                            <a href="/register">
                                 <button class="signUp">Đăng ký</button>
                             </a>
                         </class>
@@ -188,6 +188,13 @@
                 team</small>
         </div>
     </footer>
+    <script>
+        const userDetailsButton = document.querySelector('.user-details-button');
+        const userDetailsContainer = document.querySelector('.user-details-container');
+        userDetailsButton.addEventListener('click', function () {
+            userDetailsContainer.classList.toggle('active');
+        });
+    </script>
 </body>
 
 

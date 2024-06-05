@@ -23,23 +23,23 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.get('*', checkUser);
 
-app.get('/', requireAuth, (req, res) => {
-    const token = req.cookies.jwt;
-    console.log(token);
-    if (token) {
-        jwt.verify(token, 'secret', (err, decodedToken) => {
-            if (err) {
-                res.render('LoginPage');
-            } else {
-                res.render('HomePage');
-            }
-        });
-    } else {
-        res.render('LoginPage');
-    }
+app.get('/', (req, res) => {
+    // const token = req.cookies.jwt;
+    // if (token) {
+    //     jwt.verify(token, 'secret', (err, decodedToken) => {
+    //         if (err) {
+    //             res.render('LoginPage');
+    //         } else {
+    //             res.render('HomePage');
+    //         }
+    //     });
+    // } else {
+    //     res.render('LoginPage');
+    // }
+    res.render('HomePage');
 })
 
-app.get('/home', requireAuth, (req, res) => {
+app.get('/home', (req, res) => {
     res.render('HomePage');
 })
 
