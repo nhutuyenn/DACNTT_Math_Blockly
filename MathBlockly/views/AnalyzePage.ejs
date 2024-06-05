@@ -13,7 +13,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://kit.fontawesome.com/61a0b1fdce.js"
       crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./assets/css/AnalyzePage.css">
+    <link rel="stylesheet" href="../assets/css/AnalyzePage.css">
     <script src="./main.js"></script>
     <title>Analyze Page</title>
   </head>
@@ -23,15 +23,19 @@
       <row>
           <div class="d-flex flex-wrap align-items-center justify-content-center mx-auto">
               <div class="col-3">
-                  <img src="./assets/images/logo.png" alt="Logo LeMath" width="130px" height="40px"
+                  <img src="../assets/images/logo.png" alt="Logo LeMath" width="130px" height="40px"
                       style="float: right;"></img>
               </div>
               <form action="" class="col-6 p-3 px-3">
                   <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm" style="width: 300px;">
               </form>
               <class class="col-3 headerBtn">
+                <a href="/LoginPage">
                   <button class="logIn">Đăng nhập</button>
+                </a>
+                <a href="/RegisterPage">
                   <button class="signUp">Đăng ký</button>
+                </a>
               </class>
           </div>
       </row>
@@ -39,16 +43,16 @@
       <nav class="navbar navbar-expand-sm bg-light justify-content-center">
           <ul class="navbar-nav">
               <li class="nav-item px-5">
-                  <a class="nav-link" href="#">Về LeMath</a>
+                  <a class="nav-link" href="/HomePage">Về LeMath</a>
               </li>
               <li class="nav-item px-5">
-                  <a class="nav-link" href="/StudyPage.html">Bài học</a>
+                  <a class="nav-link" href="/StudyPage">Bài học</a>
               </li>
               <li class="nav-item px-5">
-                  <a class="nav-link" href="#">Lịch sử học</a>
+                  <a class="nav-link" href="/StudyPage">Lịch sử học</a>
               </li>
               <li class="nav-item px-5">
-                  <a class="nav-link" href="#">Thống kê</a>
+                  <a class="nav-link" href="/AnalyzePage">Thống kê</a>
               </li>
           </ul>
       </nav>
@@ -212,7 +216,7 @@
               <tr class="table-details table-danger padded-row">
                 <th scope="row">1</th>
                 <td>Số cộng</td>
-                <td>0:45:25</td>  
+                <td>0:45:25</td>
                 <td>@18/05/2024 19:00</td>
                 <td>14/20 (Điểm: 7)</td>
                 <td><a href="#" class="text-decoration-none">Chi tiết bài

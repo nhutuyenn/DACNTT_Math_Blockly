@@ -21,28 +21,11 @@ app.use(authRoutes);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// const dbURL = 'mongodb+srv://aceofg5:EFJsa1mzUKHLuIVi@lemathdb.wggjkbl.mongodb.net/?retryWrites=true&w=majority&appName=LeMathDB';
-
-// mongoose
-//     .connect(dbURL,
-//     //     {
-//     //     useNewUrlParser: true,
-//     //     useUnifiedTopology: true,
-//     // }
-// )
-//     .then((result) => {
-//         app.listen(3000), () => {
-//             console.log('Listening on port 3000');
-//         };
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//     })
-
 app.get('*', checkUser);
 
 app.get('/', requireAuth, (req, res) => {
     const token = req.cookies.jwt;
+    console.log(token);
     if (token) {
         jwt.verify(token, 'secret', (err, decodedToken) => {
             if (err) {
@@ -58,7 +41,6 @@ app.get('/', requireAuth, (req, res) => {
 
 app.get('/home', requireAuth, (req, res) => {
     res.render('HomePage');
-    // res.send('Hello World!');
 })
 
 app.listen(port, () => {

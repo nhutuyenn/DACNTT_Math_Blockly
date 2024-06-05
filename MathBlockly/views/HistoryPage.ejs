@@ -13,7 +13,7 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <script src="https://kit.fontawesome.com/61a0b1fdce.js"
             crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="./assets/css/HistoryPage.css">
+        <link rel="stylesheet" href="../assets/css/HistoryPage.css">
         <script src="./main.js"></script>
         <title>History Page</title>
     </head>
@@ -23,32 +23,36 @@
             <row>
                 <div class="d-flex flex-wrap align-items-center justify-content-center mx-auto">
                     <div class="col-3">
-                        <img src="./assets/images/logo.png" alt="Logo LeMath" width="130px" height="40px"
+                        <img src="../assets/images/logo.png" alt="Logo LeMath" width="130px" height="40px"
                             style="float: right;"></img>
                     </div>
                     <form action="" class="col-6 p-3 px-3">
                         <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm" style="width: 300px;">
                     </form>
                     <class class="col-3 headerBtn">
-                        <button class="logIn">Đăng nhập</button>
-                        <button class="signUp">Đăng ký</button>
+                        <a href="/LoginPage">
+                            <button class="logIn">Đăng nhập</button>
+                          </a>
+                          <a href="/RegisterPage">
+                            <button class="signUp">Đăng ký</button>
+                          </a>
                     </class>
                 </div>
             </row>
-      
+
             <nav class="navbar navbar-expand-sm bg-light justify-content-center">
                 <ul class="navbar-nav">
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="#">Về LeMath</a>
+                        <a class="nav-link" href="/HomePage">Về LeMath</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="/StudyPage.html">Bài học</a>
+                        <a class="nav-link" href="/StudyPage">Bài học</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="#">Lịch sử học</a>
+                        <a class="nav-link" href="/StudyPage">Lịch sử học</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="#">Thống kê</a>
+                        <a class="nav-link" href="/AnalyzePage">Thống kê</a>
                     </li>
                 </ul>
             </nav>

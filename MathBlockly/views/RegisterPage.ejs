@@ -13,7 +13,7 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <script src="https://kit.fontawesome.com/61a0b1fdce.js"
             crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="./assets/css/Register.css">
+        <link rel="stylesheet" href="../assets/css/Register.css">
         <title>Register</title>
     </head>
 
@@ -23,12 +23,12 @@
             <section
                 class="launch-app d-flex flex-column align-items-center rounded-5">
                 <div class="logo-app">
-                    <img src="./assets/images/cover-logo.png"
+                    <img src="../assets/images/cover-logo.png"
                         alt="logo-LeMath" srcset>
                 </div>
                 <div class="cover-img">
                     <img
-                        src="./assets/images/register_page_cover.png"
+                        src="../assets/images/register_page_cover.png"
                         alt="img-cover-LeMath" srcset>
                 </div>
                 <div class="register-btn ">
@@ -114,7 +114,7 @@
             const form = document.querySelector("form");
 
             const userError = document.querySelector(".username.error")
-            
+
             const emailError = document.querySelector(".email.error")
             const passwordError = document.querySelector(".password.error")
 
@@ -141,7 +141,7 @@
                             password,
                         }),
                     });
-                    
+
                     const data = await response.json({});
                     console.log(data);
 
@@ -151,7 +151,7 @@
                         passwordError.textContent = data.errors.password
                     }
                     if(data.user){
-                        location.assign('/home')
+                        location.assign('/HomePage')
                     }
 
                 } catch (error) {
