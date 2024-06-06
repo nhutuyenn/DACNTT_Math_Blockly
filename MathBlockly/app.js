@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const { requireAuth, checkUser } = require('./middlewares/authMiddlewares');
 const jwt = require('jsonwebtoken');
 const { MONGO_URL } = process.env;
+const studyRoutes = require('./routes/studyRoutes');
 
 const port = process.env.port
 const app = express();
@@ -17,6 +18,7 @@ app.use('/assets', express.static('assets'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(authRoutes);
+app.use(studyRoutes);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
