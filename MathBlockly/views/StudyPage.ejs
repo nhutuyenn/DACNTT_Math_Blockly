@@ -56,8 +56,13 @@
 
     <div class="py-5" style="background-color: white; border-top: 1px solid black;">
         <div class="col-10 justify-content-center mx-auto">
-            <p class="chapter">Bài 1: Làm quen hình khối</p>
-            <p class="lesson">Đề bài: Sắp xếp hình cho phù hợp</p>
+            <p class="chapter" id="chapter">Bài 1: <%= lesson[0].name %>
+            </p>
+            <p class="lesson">Đề bài: <%= question[0].direction %>
+            </p>
+            <% answer.forEach(function(tmp){ %>
+                <p class="answer" hidden><%= tmp.answer %></p>
+                <% }); %>
             <div class="d-flex flex-wrap">
                 <div id="blocklyDiv" class="col-md-9 col-12" style="height: 400px; padding-top: 0px;"></div>
                 <div class="col-md-3 col-12 ps-5">

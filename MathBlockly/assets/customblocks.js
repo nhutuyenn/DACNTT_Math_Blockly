@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+    var text = document.getElementsByClassName('question');
+
+    var answers = document.getElementsByClassName('answer');
 
     // Define the custom block
     Blockly.Blocks['block'] = {
@@ -14,28 +17,46 @@ document.addEventListener("DOMContentLoaded", function () {
             this.setHelpUrl("");
         }
     };
+    var tmp = "";
+    for (var i = 0; i < answers.length; i++) {
+        (function(index) {
+            var path = answers[index].textContent;
+            var nameBlock = "image" + index;
 
-    Blockly.Blocks['image'] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField(new Blockly.FieldImage("https://monka.vn/content/img/upload/u21-11-2018-09-45-16.png", 80, 80, { alt: "*", flipRtl: "FALSE" }));
-            this.setOutput(true, null);
-            this.setColour(165);
-            this.setTooltip("");
-            this.setHelpUrl("");
-        }
-    };
+            Blockly.Blocks[nameBlock] = {
+                init: function () {
+                    this.appendDummyInput('dummyImage')
+                        .appendField(new Blockly.FieldImage(path, 80, 80, { alt: "*", flipRtl: "FALSE" }));
+                    this.setOutput(true, null);
+                    this.setColour(165);
+                    this.setTooltip("");
+                    this.setHelpUrl("");
+                }
+            };
+
+            if (index === answers.length - 1) {
+                tmp += '<block type="' + nameBlock + '"></block>';
+            } else {
+                tmp += '<block type="' + nameBlock + '"></block>, ';
+            }
+        })(i);
+    }
 
     var workspace = Blockly.inject('blocklyDiv', {
+        toolbox: '<xml>' + tmp + '</xml>',
+        trashcan: true
     });
+
+
+    let workspaceCoordinates = workspace.getMetricsManager().getViewMetrics(true)
+    let x = workspaceCoordinates.left + (workspaceCoordinates.width / 6)
+    let y = workspaceCoordinates.top + (workspaceCoordinates.height / 6)
+    let blockCoordinates = new Blockly.utils.Coordinate(x, y)
 
     var newBlock = workspace.newBlock('block');
     newBlock.initSvg();
     newBlock.render();
-
-    var imageBlock = workspace.newBlock('image');
-    imageBlock.initSvg();
-    imageBlock.render();
+    newBlock.moveTo(blockCoordinates)
 
     // Define the custom block's JavaScript code generation
     Blockly.JavaScript['block'] = function (block) {
@@ -43,5 +64,4 @@ document.addEventListener("DOMContentLoaded", function () {
         var code = 'Hello ' + value_name + '\n';
         return code;
     };
-
 });

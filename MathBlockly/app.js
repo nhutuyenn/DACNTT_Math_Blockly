@@ -7,7 +7,11 @@ const authRoutes = require('./routes/authRoutes');
 const { requireAuth, checkUser } = require('./middlewares/authMiddlewares');
 const jwt = require('jsonwebtoken');
 const { MONGO_URL } = process.env;
-const studyRoutes = require('./routes/studyRoutes');
+const LessonModel = require('./models/lessons');
+const QuestionModel = require('./models/questions');
+const AnswerModel = require('./models/answers');
+const response = require('./models/response');
+//const studyRoutes = require('./routes/studyRoutes');
 
 const port = process.env.port
 const app = express();
@@ -18,7 +22,7 @@ app.use('/assets', express.static('assets'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(authRoutes);
-app.use(studyRoutes);
+//app.use(studyRoutes);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -39,6 +43,13 @@ app.get('/', (req, res) => {
     //     res.render('LoginPage');
     // }
     res.render('HomePage');
+})
+
+app.get('/StudyPage', async (req, res) =>{
+    const lesson = await LessonModel.find();
+    const question = await QuestionModel.find();
+    const answer = await AnswerModel.find();
+    res.render('StudyPage', {lesson, question, answer});
 })
 
 app.get('/home', (req, res) => {
