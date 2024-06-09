@@ -6,6 +6,35 @@
     color: white;
 }
 
+.effect-button{
+    box-shadow: 3px 5px 4px #00000042;
+}
+
+.fs-14 {
+    font-size: 14px;
+}
+
+.pink-color-bg {
+    background-color: #FCDDEC;
+}
+
+.user-details-button {
+    height: 40px;
+    width: 40px;
+    background-color: #7879F1;
+}
+
+.user-details-container{
+    z-index: 100;
+    right: 155px;
+    bottom: -25px;
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
 .logIn{
     background-color: #EF5DA8;
     border-color: #EF5DA8;

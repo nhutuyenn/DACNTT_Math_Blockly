@@ -26,14 +26,35 @@
                     <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm"
                         style="width: 300px;">
                 </form>
-                <class class="col-3 headerBtn">
-                    <a href="/LoginPage">
-                        <button class="logIn">Đăng nhập</button>
-                    </a>
-                    <a href="/RegisterPage">
-                        <button class="signUp">Đăng ký</button>
-                    </a>
-                </class>
+                <% if(user) { %>
+                    <div class="ms-6 col-2">
+                        <button class="user-details-button rounded-circle border-0"><i
+                                class="fa-solid fa-user"></i></button>
+                    </div>
+                    <div class="user-details-container rounded-4 pink-color-bg effect-button position-absolute">
+                        <div class="user-details-link px-4 pt-3 pb-2">
+                            <a href="#" class="text-decoration-none text-dark">
+                                <i class="fa-solid fa-user fs-14 me-2"></i>
+                                <span class="fs-14">Trang cá nhân</span>
+                            </a>
+                        </div>
+                        <div class="logout px-4 pb-3 pt-2">
+                            <a href="/logout" class="text-decoration-none text-dark">
+                                <i class="fa-solid fa-right-from-bracket fs-14 me-2"></i>
+                                <span class="fs-14">Đăng xuất</span>
+                            </a>
+                        </div>
+                    </div>
+                    <% } else { %>
+                        <class class="col-3 headerBtn text-decoration-none">
+                            <a href="/login">
+                                <button class="logIn">Đăng nhập</button>
+                            </a>
+                            <a href="/register">
+                                <button class="signUp">Đăng ký</button>
+                            </a>
+                        </class>
+                        <% } %>
             </div>
         </row>
         <nav class="navbar navbar-expand-sm bg-light justify-content-center">
@@ -54,39 +75,81 @@
         </nav>
     </header>
 
-    <div class="py-5" style="background-color: white; border-top: 1px solid black;">
-        <div class="col-10 justify-content-center mx-auto">
-            <p class="chapter" id="chapter">Bài 1: <%= lesson[0].name %>
-            </p>
-            <p class="lesson">Đề bài: <%= question[0].direction %>
-            </p>
-            <% answer.forEach(function(tmp){ %>
-                <p class="answer" hidden><%= tmp.answer %></p>
-                <% }); %>
-            <div class="d-flex flex-wrap">
-                <div id="blocklyDiv" class="col-md-9 col-12" style="height: 400px; padding-top: 0px;"></div>
-                <div class="col-md-3 col-12 ps-5">
-                    <div class="exercise">
-                        <button class="col-3 m-1 border rounded-2 effect-button">1</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">2</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">3</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">4</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">5</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">6</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">7</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">8</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">9</button>
-                        <button class="col-3 m-1 border rounded-2 effect-button">10</button>
-                    </div>
-                    <div class="text-center">
-                        <p class="mt-3 col-12 time">00 : 01 : 25</p>
-                        <button class="submitBtn effect-button">Nộp</button>
-                    </div>
+    <form method="post" onsubmit="return onSubmitForm()">
+        <div class="py-5" style="background-color: white; border-top: 1px solid black;">
+            <div class="col-10 justify-content-center mx-auto">
+                <p class="chapter">Chủ đề: <span id="chapter">
+                        <%= lessons[0].name %>
+                    </span>
+                </p>
+                <p class="lesson">Đề bài: <span id="lesson">
+                        <%= questions[0].direction %>
+                    </span>
+                </p>
+                <p id="temp" hidden data-questions="<%= JSON.stringify(questions) %>">
+                    <%= questions %>
+                </p>
+                <p class="question" id="question" hidden>
+                    <%= questions[0].question %>
+                </p>
+                <p id="answers" hidden data-answers="<%= JSON.stringify(answers) %>"></p>
+                <div class="d-flex flex-wrap">
+                    <div id="blocklyDiv" class="col-md-9 col-12" style="height: 400px; padding-top: 0px;"></div>
 
+                    <div class="col-md-3 col-12 ps-5">
+                        <div class="exercise">
+                            <button type="button" onclick="changeQuestion(this,1)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">1</button>
+                            <input hidden name="answer1" id="answer1" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 2)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">2</button>
+                            <input hidden name="answer2" id="answer2" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 3)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">3</button>
+                            <input hidden name="answer3" id="answer3" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 4)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">4</button>
+                            <input hidden name="answer4" id="answer4" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 5)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">5</button>
+                            <input hidden name="answer5" id="answer5" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 6)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">6</button>
+                            <input hidden name="answer6" id="answer6" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 7)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">7</button>
+                            <input hidden name="answer7" id="answer7" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 8)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">8</button>
+                            <input hidden name="answer8" id="answer8" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 9)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">9</button>
+                            <input hidden name="answer9" id="answer9" value="">
+
+                            <button type="button" onclick="changeQuestion(this, 10)"
+                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">10</button>
+                            <input hidden name="answer10" id="answer10" value="">
+
+                        </div>
+                        <div class="text-center">
+                            <p class="mt-3 col-12 time" id="countdown">00 : 15 : 00</p>
+                            <button name="answerinput" value="" type="submit" class="submitBtn effect-button"
+                                id="submitBtn">Nộp</button>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
     <footer class="footer " style="background-color: #FCDDEC;">
         <div class="footer-content d-flex flex-column d-flex align-items-center justify-content-center">
             <h2 class="footer-heading fs-5 fw-normal pt-4 ">Theo dõi trên nền tảng
@@ -101,7 +164,129 @@
         </div>
     </footer>
 
-    <script src="../assets/customblocks.js"></script>
+    <script src="../assets/customeblock.js"></script>
+    <script>
+
+        const userDetailsButton = document.querySelector('.user-details-button');
+        const userDetailsContainer = document.querySelector('.user-details-container');
+        userDetailsButton.addEventListener('click', function () {
+            userDetailsContainer.classList.toggle('active');
+        });
+
+        var countdownTime = 15 * 60
+
+        function updateCountdown() {
+            var seconds = countdownTime % 60;
+            var minutes = Math.floor(countdownTime / 60);
+            var hours = Math.floor(minutes / 60);
+            minutes %= 60;
+            var formattedTime = ('0' + hours).slice(-2) + ' : ' + ('0' + minutes).slice(-2) + ' : ' + ('0' + seconds).slice(-2);
+
+            document.getElementById('countdown').innerHTML = formattedTime;
+            countdownTime--;
+
+            if (countdownTime < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').innerHTML = '00 : 00 : 00';
+                document.getElementById('submitBtn').click();
+            }
+        }
+
+        var countdownInterval = setInterval(updateCountdown, 1000);
+
+        var answers = document.getElementsByClassName('answerBtn');
+        var i = 1;
+        function changeQuestion(button, num) {
+            const questionsElement = JSON.parse(document.getElementById('temp').getAttribute('data-questions'));
+            var lesson = document.getElementById('lesson');
+            var question = document.getElementById('question');
+            const answer = document.getElementById('answer' + i);
+            var createNewBlock = true;
+
+            answer.value = "";
+            lesson.innerHTML = questionsElement[num - 1].direction;
+            document.getElementById("question").innerHTML = questionsElement[num - 1].question;
+
+            const questionBlocks = Blockly.getMainWorkspace().getBlocksByType('block');
+
+            if (questionBlocks.length == 0) {
+                createNewBlock = false;
+                questionBlocks = Blockly.getMainWorkspace().getAllBlocks();
+                answers[i - 1].value = questionBlocks[0].type
+                answer.value = questionBlocks[0].type
+            }
+
+            for (const block of questionBlocks) {
+                const child = block.getChildren()
+                if (child.length > 0) {
+                    answers[i - 1].value = answers[i - 1].value + " " + child[0].type
+                    answer.value = answer.value + " " + child[0].type
+                }
+            }
+            i = num;
+            var workspace = Blockly.getMainWorkspace();
+            workspace.clear();
+
+            if (createNewBlock == true) {
+                Blockly.Blocks['block'] = {
+                    init: function () {
+                        this.appendDummyInput("dummy_input")
+                            .appendField(questionsElement[num - 1].question);
+                        this.appendValueInput("NAME")
+                            .setCheck(null)
+                            .setAlign(Blockly.ALIGN_RIGHT)
+                            .appendField("Hình ảnh:");
+                        this.setColour(180);
+                        this.setTooltip("");
+                        this.setHelpUrl("");
+                    }
+                };
+
+                let workspaceCoordinates = workspace.getMetricsManager().getViewMetrics(true)
+                let x = workspaceCoordinates.left + (workspaceCoordinates.width / 6)
+                let y = workspaceCoordinates.top + (workspaceCoordinates.height / 6)
+                let blockCoordinates = new Blockly.utils.Coordinate(x, y)
+
+                var newBlock = workspace.newBlock('block');
+                newBlock.initSvg();
+                newBlock.render();
+                newBlock.moveTo(blockCoordinates)
+            }
+        }
+
+        async function onSubmitForm() {
+            const questionsElement = JSON.parse(document.getElementById('temp').getAttribute('data-questions'));
+            var question = document.getElementById('question');
+            var answer = document.getElementById('answer' + i);
+            answer.value = "";
+
+            document.getElementById("question").innerHTML = questionsElement[i].question;
+
+            const questionBlocks = Blockly.getMainWorkspace().getBlocksByType('block');
+
+            if (questionBlocks.length == 0) {
+                questionBlocks = Blockly.getMainWorkspace().getAllBlocks();
+                answers[i - 1].value = questionBlocks[0].type
+                answer.value = questionBlocks[0].type
+            }
+
+            for (const block of questionBlocks) {
+                const child = block.getChildren()
+                if (child.length > 0) {
+                    answers[i - 1].value = answers[i - 1].value + " " + child[0].type
+                    answer.value = answer.value + " " + child[0].type
+                }
+            }
+            var submitBtn = document.getElementById('submitBtn');
+            var tmp = [];
+            for (var j = 0; j < answers.length; j++) {
+                tmp.push(answers[j].value);
+                submitBtn.value = tmp.join(' ');
+            }
+            return true;
+        }
+
+    </script>
 </body>
 
 </html>
