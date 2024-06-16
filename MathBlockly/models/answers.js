@@ -12,10 +12,6 @@ const answerSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
   },
 
-  answer:{
-    type: String
-  },
-
   connection:{
     type: String
   }

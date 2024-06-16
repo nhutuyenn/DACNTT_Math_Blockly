@@ -1,32 +1,32 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const resultSchema = new mongoose.Schema({
   lessonID: {
-    type: ObjectID,
+    type: Schema.Types.ObjectId,
     required: true
-},
-
+  },
+  lessonName: {
+    type: String,
+    required: true
+  },
   accountID: {
-    type: ObjectID,
+    type: Schema.Types.ObjectId,
     required: true
   },
 
-  score:{
+  score: {
     type: Number,
     required: true
   },
 
-  time:{
+  time: {
     type: String,
     required: true
   },
 
-  dateBirth:{
+  createAt: {
     type: Date,
-  },
-
-  school:{
-    type: String,
   }
 });
 
