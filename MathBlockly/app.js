@@ -37,7 +37,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.get('*', checkUser);
 
 app.get('/', async (req, res) => {
-    //console.log(await UserModel.find({ _id: '665be10d0a40d274840f9fd0' }));
     res.render('HomePage');
 })
 
@@ -60,7 +59,6 @@ app.post('/StudyPage/:id', async (req, res) => {
     try {
         const validations = await ValidationModel.find();
         const objects = JSON.parse(req.body.answerinput);
-        //console.log(new Date());
 
         validations.forEach((validation) => {
             // Compare questionID
@@ -68,8 +66,6 @@ app.post('/StudyPage/:id', async (req, res) => {
                 // Compare answerID
                 const answerIDs = validation.answerID;
                 const objectAnswerIDs = objects[validation.questionID.toString()].trim().split(' ');
-                console.log("answerIDs " + answerIDs);
-                console.log("objectAnswerIDs " + objectAnswerIDs);
                 if (answerIDs.length === objectAnswerIDs.length) {
                     for (let i = 0; i < answerIDs.length; i++) {
                         if (answerIDs[i] !== objectAnswerIDs[i]) {
@@ -93,9 +89,8 @@ app.post('/StudyPage/:id', async (req, res) => {
     const userID = jwt.verify(token, 'secret').id;
 
     const date = new Date()
-    date.setTime(date.getTime()+ 420 * 60000)
+    date.setTime(date.getTime() + 420 * 60000)
 
-    console.log(date)
     const result = new ResultModel({
         lessonID: id,
         lessonName: lessons[0].name,
@@ -111,8 +106,7 @@ app.post('/StudyPage/:id', async (req, res) => {
 app.get('/HistoryPage', async (req, res) => {
     const token = req.cookies.jwt;
     const userID = jwt.verify(token, 'secret').id;
-    const results = await ResultModel.find({accountID: userID});
-    console.log(results)
+    const results = await ResultModel.find({ accountID: userID });
     res.render('HistoryPage', { results });
 })
 
@@ -128,12 +122,6 @@ app.post('/LessonPage', async (req, res) => {
 })
 
 app.get('/home', async (req, res) => {
-    //const validation = await ValidationModel.find();
-    //console.log(validation)
-
-    const token = req.cookies.jwt;
-    const userID = jwt.verify(token, 'secret').id;
-    console.log(userID)
     res.render('HomePage');
 })
 
