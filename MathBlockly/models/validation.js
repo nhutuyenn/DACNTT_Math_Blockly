@@ -1,20 +1,19 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const validationSchema = new mongoose.Schema({
   questionID:{
-    type: ObjectID,
+    type: Schema.Types.ObjectId,
     required: true
   },
 
-  answerID:{
-    type: ObjectID,
+  answerID: [{
+    type: String,
     required: true
-  },
+  }],
 
   type:{
-    type: Boolean,
-    required: true
-  }
+    type: Boolean  }
 });
 
 const Validation = mongoose.model('validation', validationSchema);

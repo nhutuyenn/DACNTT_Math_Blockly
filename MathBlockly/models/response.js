@@ -7,15 +7,20 @@ const responseSchema = new mongoose.Schema({
     required: true
   },
 
+  resultID: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+
   questionID: {
     type: Schema.Types.ObjectId,
     required: true
   },
 
-  answerID: {
+  answerID: [{
     type: Schema.Types.ObjectId,
     required: true
-  }
+  }]
 });
 
 const Response = mongoose.model('response', responseSchema);

@@ -9,8 +9,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/61a0b1fdce.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="../node_modules/blockly/blockly_compressed.js"></script>
+    <script src="../node_modules/blockly/blocks_compressed.js"></script>
+    <script src="../node_modules/blockly/msg/vi.js"></script>
+
     <title>Study Page</title>
 </head>
 
@@ -75,7 +80,7 @@
         </nav>
     </header>
 
-    <form method="post" onsubmit="return onSubmitForm()">
+    <form method="post" onclick="onSubmitForm()">
         <div class="py-5" style="background-color: white; border-top: 1px solid black;">
             <div class="col-10 justify-content-center mx-auto">
                 <p class="chapter">Chủ đề: <span id="chapter">
@@ -100,49 +105,39 @@
                         <div class="exercise">
                             <button type="button" onclick="changeQuestion(this,1)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">1</button>
-                            <input hidden name="answer1" id="answer1" value="">
-
                             <button type="button" onclick="changeQuestion(this, 2)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">2</button>
-                            <input hidden name="answer2" id="answer2" value="">
 
                             <button type="button" onclick="changeQuestion(this, 3)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">3</button>
-                            <input hidden name="answer3" id="answer3" value="">
 
                             <button type="button" onclick="changeQuestion(this, 4)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">4</button>
-                            <input hidden name="answer4" id="answer4" value="">
 
                             <button type="button" onclick="changeQuestion(this, 5)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">5</button>
-                            <input hidden name="answer5" id="answer5" value="">
 
                             <button type="button" onclick="changeQuestion(this, 6)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">6</button>
-                            <input hidden name="answer6" id="answer6" value="">
 
                             <button type="button" onclick="changeQuestion(this, 7)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">7</button>
-                            <input hidden name="answer7" id="answer7" value="">
 
                             <button type="button" onclick="changeQuestion(this, 8)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">8</button>
-                            <input hidden name="answer8" id="answer8" value="">
 
                             <button type="button" onclick="changeQuestion(this, 9)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">9</button>
-                            <input hidden name="answer9" id="answer9" value="">
 
                             <button type="button" onclick="changeQuestion(this, 10)"
                                 class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">10</button>
-                            <input hidden name="answer10" id="answer10" value="">
 
                         </div>
                         <div class="text-center">
                             <p class="mt-3 col-12 time" id="countdown">00 : 15 : 00</p>
-                            <button name="answerinput" value="" type="submit" class="submitBtn effect-button"
-                                id="submitBtn">Nộp</button>
+                            <input type="hidden" id="countdownValue" name="countdownValue">
+                            <button onclick="onSubmitForm()" name="answerinput" value="" type="submit"
+                                class="submitBtn effect-button" id="submitBtn">Nộp</button>
                         </div>
 
                     </div>
@@ -166,14 +161,17 @@
 
     <script src="../assets/customeblock.js"></script>
     <script>
+        var countdownTime = 15 * 60
+        var countdownInterval = setInterval(updateCountdown, 1000);
+        var i = 1;
+        var objects = {};
 
         const userDetailsButton = document.querySelector('.user-details-button');
         const userDetailsContainer = document.querySelector('.user-details-container');
+
         userDetailsButton.addEventListener('click', function () {
             userDetailsContainer.classList.toggle('active');
         });
-
-        var countdownTime = 15 * 60
 
         function updateCountdown() {
             var seconds = countdownTime % 60;
@@ -192,39 +190,59 @@
             }
         }
 
-        var countdownInterval = setInterval(updateCountdown, 1000);
 
-        var answers = document.getElementsByClassName('answerBtn');
-        var i = 1;
         function changeQuestion(button, num) {
             const questionsElement = JSON.parse(document.getElementById('temp').getAttribute('data-questions'));
+
             var lesson = document.getElementById('lesson');
             var question = document.getElementById('question');
-            const answer = document.getElementById('answer' + i);
+            var tmp = "";
             var createNewBlock = true;
+            var workspace = Blockly.getMainWorkspace();
 
-            answer.value = "";
+            let questionBlocks = Blockly.getMainWorkspace().getBlocksByType('block');
+
             lesson.innerHTML = questionsElement[num - 1].direction;
             document.getElementById("question").innerHTML = questionsElement[num - 1].question;
 
-            const questionBlocks = Blockly.getMainWorkspace().getBlocksByType('block');
 
             if (questionBlocks.length == 0) {
                 createNewBlock = false;
                 questionBlocks = Blockly.getMainWorkspace().getAllBlocks();
-                answers[i - 1].value = questionBlocks[0].type
-                answer.value = questionBlocks[0].type
+
+                if (questionBlocks.length > 0) {
+                    if(questionBlocks[0].type === "logic_compare"){
+                        tmp = tmp + questionBlocks[0].getFieldValue('OP') + " "
+                    }
+                    else if(questionBlocks[0].type === "logic_boolean"){
+                        tmp = tmp + questionBlocks[0].getFieldValue('BOOL') + " "
+                    }
+                    else if(questionBlocks[0].type === "math_number"){
+                        tmp = tmp + questionBlocks[0].getFieldValue('NUM') + " "
+                    }
+                    else
+                        tmp = tmp + questionBlocks[0].type + " "
+                }
             }
 
             for (const block of questionBlocks) {
-                const child = block.getChildren()
-                if (child.length > 0) {
-                    answers[i - 1].value = answers[i - 1].value + " " + child[0].type
-                    answer.value = answer.value + " " + child[0].type
+                const childs = block.getChildren()
+                if (childs.length > 0) {
+                    for (const child of childs) {
+                        if(child.type === "math_number"){
+                            tmp = tmp + child.getFieldValue('NUM') + " "
+                        }
+                        else {
+                            tmp = tmp + child.type + " "
+                        }
+
+                    }
                 }
             }
+
+            objects[questionsElement[i - 1]._id.toString()] = tmp
             i = num;
-            var workspace = Blockly.getMainWorkspace();
+
             workspace.clear();
 
             if (createNewBlock == true) {
@@ -255,36 +273,46 @@
         }
 
         async function onSubmitForm() {
+            const obj = document.getElementById('objects');
             const questionsElement = JSON.parse(document.getElementById('temp').getAttribute('data-questions'));
+            const countdownElement = document.getElementById('countdown');
+            const countdownValueInput = document.getElementById('countdownValue');
+
+
+            let questionBlocks = Blockly.getMainWorkspace().getBlocksByType('block');
+
+            var tmp = "";
             var question = document.getElementById('question');
-            var answer = document.getElementById('answer' + i);
-            answer.value = "";
 
-            document.getElementById("question").innerHTML = questionsElement[i].question;
-
-            const questionBlocks = Blockly.getMainWorkspace().getBlocksByType('block');
+            document.getElementById("question").innerHTML = questionsElement[i - 1].question;
 
             if (questionBlocks.length == 0) {
                 questionBlocks = Blockly.getMainWorkspace().getAllBlocks();
-                answers[i - 1].value = questionBlocks[0].type
-                answer.value = questionBlocks[0].type
+                if (questionBlocks.length > 0) {
+                    tmp = tmp + questionBlocks[0].type + " ";
+                }
             }
 
             for (const block of questionBlocks) {
-                const child = block.getChildren()
-                if (child.length > 0) {
-                    answers[i - 1].value = answers[i - 1].value + " " + child[0].type
-                    answer.value = answer.value + " " + child[0].type
+                const childs = block.getChildren()
+                if (childs.length > 0) {
+                    for (const child of childs) {
+                        tmp = tmp + child.type + " "
+                    }
                 }
+                /*if (childs.length > 0) {
+                    tmp = tmp + childs[0].type + " "
+                }*/
             }
+
+            objects[questionsElement[i - 1]._id.toString()] = tmp
             var submitBtn = document.getElementById('submitBtn');
-            var tmp = [];
-            for (var j = 0; j < answers.length; j++) {
-                tmp.push(answers[j].value);
-                submitBtn.value = tmp.join(' ');
+            submitBtn.value = JSON.stringify(objects);
+            if (countdownElement && countdownValueInput) {
+                countdownValueInput.value = countdownElement.innerHTML;
             }
-            return true;
         }
+
 
     </script>
 </body>

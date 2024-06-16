@@ -1,17 +1,20 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const { Schema, model } = mongoose;
-const { ObjectId } = Schema.Types;
-
-const resultSchema = new Schema({
+const resultSchema = new mongoose.Schema({
   lessonID: {
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  lessonName: {
+    type: String,
     required: true
   },
   accountID: {
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
     required: true
   },
+
   score: {
     type: Number,
     required: true
@@ -20,11 +23,9 @@ const resultSchema = new Schema({
     type: String,
     required: true
   },
-  dateBirth: {
-    type: Date
-  },
-  school: {
-    type: String
+
+  createAt: {
+    type: Date,
   }
 });
 
