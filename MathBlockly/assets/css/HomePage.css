@@ -156,8 +156,8 @@
 
 .user-details-container{
     z-index: 100;
-    right: 155px;
-    bottom: -25px;
+    right: 165px;
+    top: 80px;
     display: none;
 }
 

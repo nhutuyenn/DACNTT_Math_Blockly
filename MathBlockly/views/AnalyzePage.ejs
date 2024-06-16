@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet">
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://kit.fontawesome.com/61a0b1fdce.js"
-      crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://kit.fontawesome.com/61a0b1fdce.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../assets/css/AnalyzePage.css">
-    <script src="./main.js"></script>
     <title>Analyze Page</title>
   </head>
 
-  <body>
-    <header class="p-3 text-white">
+  <body style="background-color: #FAFAFA;">
+    <header class="p-3 text-white position-relative">
       <row>
           <div class="d-flex flex-wrap align-items-center justify-content-center mx-auto">
               <div class="col-3">
@@ -29,37 +23,58 @@
               <form action="" class="col-6 p-3 px-3">
                   <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm" style="width: 300px;">
               </form>
-              <class class="col-3 headerBtn">
-                <a href="/LoginPage">
-                  <button class="logIn">Đăng nhập</button>
-                </a>
-                <a href="/RegisterPage">
-                  <button class="signUp">Đăng ký</button>
-                </a>
-              </class>
+              <% if(user) { %>
+                <div class="ms-6 col-2">
+                    <button class="user-details-button rounded-circle border-0"><i
+                            class="fa-solid fa-user"></i></button>
+                </div>
+                <div class="user-details-container rounded-4 pink-color-bg effect-button position-absolute">
+                    <div class="user-details-link px-4 pt-3 pb-2">
+                        <a href="#" class="text-decoration-none text-dark">
+                            <i class="fa-solid fa-user fs-14 me-2"></i>
+                            <span class="fs-14">Trang cá nhân</span>
+                        </a>
+                    </div>
+                    <div class="logout px-4 pb-3 pt-2">
+                        <a href="/logout" class="text-decoration-none text-dark">
+                            <i class="fa-solid fa-right-from-bracket fs-14 me-2"></i>
+                            <span class="fs-14">Đăng xuất</span>
+                        </a>
+                    </div>
+                </div>
+                <% } else { %>
+                    <class class="col-3 headerBtn text-decoration-none">
+                        <a href="/login">
+                            <button class="logIn">Đăng nhập</button>
+                        </a>
+                        <a href="/register">
+                            <button class="signUp">Đăng ký</button>
+                        </a>
+                    </class>
+                    <% } %>
           </div>
       </row>
 
       <nav class="navbar navbar-expand-sm bg-light justify-content-center">
           <ul class="navbar-nav">
               <li class="nav-item px-5">
-                  <a class="nav-link" href="/HomePage">Về LeMath</a>
+                  <a class="nav-link fw-bold " href="/HomePage">Về LeMath</a>
               </li>
               <li class="nav-item px-5">
-                  <a class="nav-link" href="/LessonPage">Bài học</a>
+                  <a class="nav-link fw-bold" href="/LessonPage">Bài học</a>
               </li>
               <li class="nav-item px-5">
-                  <a class="nav-link" href="/LessonPage">Lịch sử học</a>
+                  <a class="nav-link fw-bold" href="/LessonPage">Lịch sử học</a>
               </li>
               <li class="nav-item px-5">
-                  <a class="nav-link" href="/AnalyzePage">Thống kê</a>
+                  <a class="nav-link fw-bold active" href="/AnalyzePage">Thống kê</a>
               </li>
           </ul>
       </nav>
   </header>
-    <section id="body-container" class="mx-5 my-5">
+    <section id="body-container" class="mx-5 mb-5" style="background-color: white; border-top: 1px solid black;">
       <section
-        class="title-analyze-container container d-flex justify-content-start">
+        class="title-analyze-container container d-flex justify-content-start mt-5">
         <div>
           <i class="fa-solid fa-chart-simple fs-1"></i>
         </div>
@@ -79,8 +94,8 @@
               <option value="14 days" selected>14 ngày gần nhất</option>
               <option value="30 days">1 tháng gần nhất</option>
             </select>
-            <button class="search-button-lesson border-0 p-2 ms-3 "><span
-                class="fs-6 text-light">Tìm kiếm</span></button>
+            <button class="search-button-lesson border-0 p-2 ms-3 effect-button"><span
+                class="fs-6 text-light ">Tìm kiếm</span></button>
           </form>
 
         </div>
@@ -93,7 +108,9 @@
             class="statistic-card border d-flex flex-column justify-content-center align-items-center">
             <i class="fa-solid fa-book fs-5 pt-2"></i>
             <h4 class="statistic-title fs-6 pt-2">Bài học đã học</h4>
-            <p class="statistic-value fs-4 fw-bold m-0">5</p>
+            <p class="statistic-value fs-4 fw-bold m-0">
+              <%= totalDuration  %>
+            </p>
             <p class="statistic-unit fs-6">bài học</p>
           </div>
         </div>
@@ -102,7 +119,9 @@
             class="statistic-card border d-flex flex-column justify-content-center align-items-center">
             <i class="fa-regular fa-clock fs-5 pt-2"></i>
             <h4 class="statistic-title fs-6 pt-2">Thời gian đã học</h4>
-            <p class="statistic-value fs-4 fw-bold m-0">50</p>
+            <p class="statistic-value fs-4 fw-bold m-0">
+              <%=  %>
+            </p>
             <p class="statistic-unit fs-6">phút</p>
           </div>
         </div>
@@ -244,5 +263,23 @@
           team</small>
       </div>
     </footer>
+
+    <script>
+      const userDetailsButton = document.querySelector('.user-details-button');
+      const userDetailsContainer = document.querySelector('.user-details-container');
+      userDetailsButton.addEventListener('click', function () {
+          userDetailsContainer.classList.toggle('active');
+      });
+
+      function sumTimeLessons() {
+          let total = 0;
+          
+          for (let i = 0; i < results.length; i++) {
+              const results = results[i];
+              total += parseInt(results.textContent);
+          }
+          return total;
+        }
+  </script>
   </body>
 </html>

@@ -1,35 +1,33 @@
 const mongoose = require('mongoose');
 
-const resultSchema = new mongoose.Schema({
-  lessonID: {
-    type: ObjectID,
-    required: true
-},
+const { Schema, model } = mongoose;
+const { ObjectId } = Schema.Types;
 
-  accountID: {
-    type: ObjectID,
+const resultSchema = new Schema({
+  lessonID: {
+    type: ObjectId,
     required: true
   },
-
-  score:{
+  accountID: {
+    type: ObjectId,
+    required: true
+  },
+  score: {
     type: Number,
     required: true
   },
-
-  time:{
+  time: {
     type: String,
     required: true
   },
-
-  dateBirth:{
-    type: Date,
+  dateBirth: {
+    type: Date
   },
-
-  school:{
-    type: String,
+  school: {
+    type: String
   }
 });
 
-const Result = mongoose.model('result', resultSchema);
+const Result = model('Result', resultSchema);
 
 module.exports = Result;

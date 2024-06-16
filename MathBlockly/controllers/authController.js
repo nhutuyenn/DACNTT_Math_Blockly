@@ -7,6 +7,16 @@ const createToken = (id) => {
   });
 }
 
+const getUserIdFromToken = (token) => {
+    try {
+      const decoded = jwt.verify(token, 'secret');
+      return decoded.id;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+};
+
 module.exports.register_get = (req, res) => {
     res.render('RegisterPage');
 }
