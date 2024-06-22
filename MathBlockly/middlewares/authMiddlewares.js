@@ -36,7 +36,22 @@ const checkUser = (req, res, next) => {
     }
 }
 
+function authenticateToken(req, res, next) {
+    const token = req.cookies.jwt;
+    if (!token) {
+        return res.status(401).send({ error: 'No token provided' });
+    }
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        req.userId = decoded.id;
+        next();
+    } catch (err) {
+        return res.status(401).send({ error: 'Invalid token' });
+    }
+}
+
 module.exports = { 
     // requireAuth,
+    authenticateToken,
     checkUser
  };

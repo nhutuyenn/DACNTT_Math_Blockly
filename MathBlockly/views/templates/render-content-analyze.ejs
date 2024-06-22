@@ -1,0 +1,34 @@
+<div class="statistics-content row d-flex justify-content-around">
+      <div class="statistics-card-container w-auto">
+        <div class="statistic-card border d-flex flex-column justify-content-center align-items-center">
+          <i class="fa-solid fa-book fs-5 pt-2"></i>
+          <h4 class="statistic-title fs-6 pt-2">Bài học đã học</h4>
+          <p class="statistic-value fs-4 fw-bold m-0" id="lessons-count">
+            <%= results.length %>
+          </p>
+          <p class="statistic-unit fs-6">bài học</p>
+        </div>
+      </div>
+      <div class="statistics-card-container w-auto">
+        <div class="statistic-card border d-flex flex-column justify-content-center align-items-center">
+          <i class="fa-regular fa-clock fs-5 pt-2"></i>
+          <h4 class="statistic-title fs-6 pt-2">Thời gian đã học</h4>
+          <p class="statistic-value fs-4 fw-bold m-0" id="total-duration">
+            <%= totalDuration %>
+          </p>
+          <p class="statistic-unit fs-6">phút</p>
+        </div>
+      </div>
+      <div class="statistics-card-container w-auto">
+        <div class="statistic-card border d-flex flex-column justify-content-center align-items-center">
+          <i class="fa-solid fa-crosshairs fs-5 pt-2"></i>
+          <h4 class="statistic-title fs-6 pt-2">Độ chính xác</h4>
+          <p class="statistic-value fs-4 fw-bold m-0" id="accuracy">
+            <%= correct %> %
+          </p>
+          <div>&nbsp;</div>
+        </div>
+      </div>
+    </div>
+
+   
