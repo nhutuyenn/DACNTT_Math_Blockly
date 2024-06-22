@@ -12,7 +12,7 @@
                     <form action="" class="col-6 p-3 px-3">
                         <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm" style="width: 300px;">
                     </form>
-                    
+
               <% if(user) { %>
                 <div class="ms-6 col-2">
                     <button class="user-details-button rounded-circle border-0"><i
@@ -57,7 +57,7 @@
                         <a class="nav-link" href="/HistoryPage">Lịch sử học</a>
                     </li>
                     <li class="nav-item px-5">
-                        <a class="nav-link" href="/AnalyzePage/<%= userId %>">Thống kê</a>
+                        <a class="nav-link active" href="/AnalyzePage/${encodeURIComponent('userId')}">Thống kê</a>
                     </li>
                 </ul>
             </nav>

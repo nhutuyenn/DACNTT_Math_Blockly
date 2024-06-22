@@ -70,7 +70,7 @@
                     <a class="nav-link" href="/HistoryPage">Lịch sử học</a>
                 </li>
                 <li class="nav-item px-5">
-                    <a class="nav-link" href="/AnalyzePage">Thống kê</a>
+                    <a class="nav-link active" href="/AnalyzePage/${encodeURIComponent('userId')}">Thống kê</a>
                 </li>
             </ul>
         </nav>
@@ -102,7 +102,6 @@
                                 </div>
                             </div>
                             <div class="px-3 py-2">
-                                <p class="inlineText">31 học viên</p>
                                 <div class="d-flex justify-content-between">
                                     <a href="/ClassroomDetail/<%= classroom._id %>"><i style="font-size: 28px;"
                                             class="bi bi-box-arrow-in-right join-button"></i></a>

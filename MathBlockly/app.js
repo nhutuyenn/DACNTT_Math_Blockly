@@ -24,6 +24,7 @@ const AnswerModel = require('./models/answers');
 const ResultModel = require('./models/result');
 const ValidationModel = require('./models/validation');
 const ClassroomModel = require('./models/classroom')
+const UserModel = require('./models/User');
 const AccountModel = require('./models/accountDetail');
 const response = require('./models/response');
 
