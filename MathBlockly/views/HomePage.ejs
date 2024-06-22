@@ -60,7 +60,7 @@
         <nav class="navbar navbar-expand-sm bg-light justify-content-center">
             <ul class="navbar-nav">
                 <li class="nav-item px-5">
-                    <a class="nav-link" href="/HomePage">Về LeMath</a>
+                    <a class="nav-link" href="/">Về LeMath</a>
                 </li>
                 <li class="nav-item px-5">
                     <a class="nav-link" href="/LessonPage">Bài học</a>
@@ -69,7 +69,7 @@
                     <a class="nav-link" href="/HistoryPage">Lịch sử học</a>
                 </li>
                 <li class="nav-item px-5">
-                    <a class="nav-link" href="/AnalyzePage">Thống kê</a>
+                    <a class="nav-link" href="/AnalyzePage/<%= userId %>">Thống kê</a>
                 </li>
             </ul>
         </nav>
@@ -194,6 +194,8 @@
         userDetailsButton.addEventListener('click', function () {
             userDetailsContainer.classList.toggle('active');
         });
+
+
     </script>
 </body>
 

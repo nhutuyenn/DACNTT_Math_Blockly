@@ -1,0 +1,27 @@
+<div class="bdr">
+    <table class="table table-hover table-borderless mx-auto d-table">
+      <thead class>
+        <tr class="table-primary padded-row ">
+          <th scope="col text-align-table">STT</th>
+          <th scope="col text-align-table">Tên bài học</th>
+          <th scope="col text-align-table">Thời gian hoàn thành</th>
+          <th scope="col">Thời gian học</th>
+          <th scope="col">Kết quả</th>
+          <th scope="col">Chi tiết bài học</th>
+        </tr>
+      </thead>
+      <% resultSorted.forEach((result, index) => { %>
+        <tbody class="pt-2 table-content">
+          <tr class="table-details table-danger padded-row">
+            <th scope="row" class="text-align-table"><%= index + 1 %></th>
+            <td class="text-align-table"><%= result.lessonName %></td>
+            <td><%= result.time %></td>
+            <td><%= result.createAt.toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }).split(",")[0] %></td>
+            <td><%= result.score %></td>
+            <td><a href="/StudyPage/<%= result.lessonID %>" class="text-decoration-none">Làm
+              lại</a></td>
+          </tr>
+        </tbody>
+      <% }); %>
+    </table>
+  </div>

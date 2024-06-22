@@ -4,18 +4,25 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
-const { requireAuth, checkUser } = require('./middlewares/authMiddlewares');
-const calculateTotalDuration = require('./controllers/analyzeController');
+const { checkUser, authenticateToken } = require('./middlewares/authMiddlewares');
+const { 
+    calculateTotalDuration, 
+    totalCorrect, 
+    getTotalLessonsByType, 
+    calculateAccuracy, 
+    calculateAverageLessonTime ,
+    calculateAverageScore,
+    calculateHighestScore,
+} = require('./controllers/analyzeController');
+const { renderPartial } = require('./utilities/utils');
 const jwt = require('jsonwebtoken');
 const { MONGO_URL } = process.env;
 
 const LessonModel = require('./models/lessons');
 const QuestionModel = require('./models/questions');
 const AnswerModel = require('./models/answers');
-const UserModel = require('./models/User');
 const ResultModel = require('./models/result');
 const ValidationModel = require('./models/validation');
-const response = require('./models/response');
 
 const bodyParser = require('body-parser');
 const port = process.env.port
@@ -38,7 +45,20 @@ app.set('views', path.join(__dirname, 'views'));
 app.get('*', checkUser);
 
 app.get('/', async (req, res) => {
-    res.render('HomePage');
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.status(401).send({ error: 'No token provided' });
+    }
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        userId = decoded.id;
+    } catch (err) {
+        return res.status(401).send({ error: 'Invalid token' });
+    }
+    res.render('HomePage', { userId });
 })
 
 app.get('/StudyPage/:id', async (req, res) => {
@@ -108,13 +128,26 @@ app.get('/HistoryPage', async (req, res) => {
     const token = req.cookies.jwt;
     const userID = jwt.verify(token, 'secret').id;
     const results = await ResultModel.find({ accountID: userID });
-    res.render('HistoryPage', { results });
+    res.render('HistoryPage', { results, userId });
 })
 
 
 app.get('/LessonPage', async (req, res) => {
     const lessons = await LessonModel.find();
-    res.render('LessonPage', { lessons });
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.status(401).send({ error: 'No token provided' });
+    }
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        userId = decoded.id;
+    } catch (err) {
+        return res.status(401).send({ error: 'Invalid token' });
+    }
+    res.render('LessonPage', { lessons, userId });
 })
 
 app.post('/LessonPage', async (req, res) => {
@@ -122,19 +155,93 @@ app.post('/LessonPage', async (req, res) => {
     res.redirect('/StudyPage/' + lessonInput);
 })
 
-app.get('/AnalyzePage/', async (req, res) => {
-    const totalDuration = await calculateTotalDuration();
-    const id = req.params.id;
-    const results = await ResultModel.find();
-    console.log(results[0].time);
-    res.render('AnalyzePage', {results, totalDuration});
-})
+
+app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.status(401).send({ error: 'No token provided' });
+    }
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        userId = decoded.id;
+    } catch (err) {
+        return res.status(401).send({ error: 'Invalid token' });
+    }
+
+    const typeofLesson = req.query.type || "Số học";
+    const timeRange = req.query.time || '14d';  // Ensure this matches the query parameter
+
+    // Parse time range
+    const endDate = new Date();
+    let startDate;
+    switch (timeRange) {
+        case '1d':
+            startDate = new Date();
+            startDate.setDate(endDate.getDate() - 1);
+            break;
+        case '7d':
+            startDate = new Date();
+            startDate.setDate(endDate.getDate() - 7);
+            break;
+        case '14d':
+            startDate = new Date();
+            startDate.setDate(endDate.getDate() - 14);
+            break;
+        case '30d':
+            startDate = new Date();
+            startDate.setMonth(endDate.getMonth() - 1);
+            break;
+        default:
+            startDate = new Date();
+            startDate.setMonth(endDate.getMonth() - 1);
+            break;
+    }
+
+    const results = await ResultModel.find({ accountID: userId , createAt: { $gte: startDate, $lt: endDate }});
+    const totalDuration = await calculateTotalDuration(results);
+    const correct = await totalCorrect(results);
+    const lessons = await LessonModel.find({ type: typeofLesson });
+    const lessonIds = lessons.map(lesson => lesson._id);
+    const resultSorted = await ResultModel.find({ 
+        accountID: userId,
+        lessonID: { $in: lessonIds },
+        createAt: { $gte: startDate, $lt: endDate }
+    });
+
+    const totalLessonsLearned =await getTotalLessonsByType(userId, typeofLesson, { startDate, endDate } );
+    const accuracy = await calculateAccuracy(userId, typeofLesson, { startDate, endDate });
+    const avgTime = await calculateAverageLessonTime(userId, typeofLesson, { startDate, endDate });
+    const avgScore = await calculateAverageScore(userId, typeofLesson, { startDate, endDate });
+    const highestScore = await calculateHighestScore(userId, typeofLesson, { startDate, endDate });
+
+    if (req.xhr) { // If the request is an AJAX request
+        const partialHtml = await renderPartial('./views/templates/statistics-row.ejs', './views/templates/statistics-table.ejs', './views/templates/render-content-analyze.ejs', { results, lessons, totalDuration, resultSorted, correct, userId, totalLessonsLearned, typeofLesson, accuracy, avgTime, avgScore, highestScore });
+        res.json({ html: partialHtml });
+    } else {
+        res.render('AnalyzePage', { results, lessons, totalDuration, resultSorted, correct, userId, totalLessonsLearned, typeofLesson, accuracy, avgTime, avgScore, highestScore });
+    }
+});
+
+
 
 app.get('/home', (req, res) => {
-    // const token = req.cookies.jwt;
-    // const userID = jwt.verify(token, 'secret').id;
-    // console.log(userID);
-    res.render('HomePage');
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.status(401).send({ error: 'No token provided' });
+    }
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        userId = decoded.id;
+    } catch (err) {
+        return res.status(401).send({ error: 'Invalid token' });
+    }
+    res.render('HomePage', { userId });
 })
 
 app.listen(port, () => {

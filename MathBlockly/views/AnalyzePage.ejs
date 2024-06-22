@@ -58,7 +58,7 @@
       <nav class="navbar navbar-expand-sm bg-light justify-content-center">
           <ul class="navbar-nav">
               <li class="nav-item px-5">
-                  <a class="nav-link fw-bold " href="/HomePage">Về LeMath</a>
+                  <a class="nav-link fw-bold " href="/">Về LeMath</a>
               </li>
               <li class="nav-item px-5">
                   <a class="nav-link fw-bold" href="/LessonPage">Bài học</a>
@@ -67,7 +67,7 @@
                   <a class="nav-link fw-bold" href="/LessonPage">Lịch sử học</a>
               </li>
               <li class="nav-item px-5">
-                  <a class="nav-link fw-bold active" href="/AnalyzePage">Thống kê</a>
+                  <a class="nav-link fw-bold active" href="/AnalyzePage/${encodeURIComponent('userId')}">Thống kê</a>
               </li>
           </ul>
       </nav>
@@ -85,71 +85,71 @@
       <section class="filter-lession container">
         <h3 class="title-filter-lession fs-6 mt-3">Lọc kết quả theo ngày( tính
           từ bài học cuối):</h3>
+        <!-- Filter form -->
         <div class="filter-lession-container d-flex justify-content-start">
-          <form class="filter-text pt-3">
-            <select id="time-lession" name="time-lession"
-              class="p-2 border border-2 rounded ">
-              <option value="1 day">1 ngày gần nhất</option>
-              <option value="7 days">7 ngày gần nhất</option>
-              <option value="14 days" selected>14 ngày gần nhất</option>
-              <option value="30 days">1 tháng gần nhất</option>
+          <form id="filter-form" class="filter-text pt-3">
+            <select id="time-lession" name="time-lession" class="p-2 border border-2 rounded">
+              <option value="1d">1 ngày gần nhất</option>
+              <option value="7d">7 ngày gần nhất</option>
+              <option value="14d" selected>14 ngày gần nhất</option>
+              <option value="30d">30 ngày gần nhất</option>
             </select>
-            <button class="search-button-lesson border-0 p-2 ms-3 effect-button"><span
-                class="fs-6 text-light ">Tìm kiếm</span></button>
+            <button type="submit" class="search-button-lesson border-0 p-2 ms-3 effect-button">
+              <span class="fs-6 text-light">Tìm kiếm</span>
+            </button>
           </form>
-
         </div>
       </section>
     </section>
-    <section id="statistics-lesstion-selected" class="container">
-      <div class="statistics-content row d-flex justify-content-around">
-        <div class="statistics-card-container w-auto">
-          <div
-            class="statistic-card border d-flex flex-column justify-content-center align-items-center">
-            <i class="fa-solid fa-book fs-5 pt-2"></i>
-            <h4 class="statistic-title fs-6 pt-2">Bài học đã học</h4>
-            <p class="statistic-value fs-4 fw-bold m-0">
-              <%= totalDuration  %>
-            </p>
-            <p class="statistic-unit fs-6">bài học</p>
-          </div>
-        </div>
-        <div class="statistics-card-container w-auto">
-          <div
-            class="statistic-card border d-flex flex-column justify-content-center align-items-center">
-            <i class="fa-regular fa-clock fs-5 pt-2"></i>
-            <h4 class="statistic-title fs-6 pt-2">Thời gian đã học</h4>
-            <p class="statistic-value fs-4 fw-bold m-0">
-              <%=  %>
-            </p>
-            <p class="statistic-unit fs-6">phút</p>
-          </div>
-        </div>
-        <div class="statistics-card-container w-auto">
-          <div
-            class="statistic-card border d-flex flex-column justify-content-center align-items-center">
-            <i class="fa-solid fa-crosshairs fs-5 pt-2"></i>
-            <h4 class="statistic-title fs-6 pt-2">Độ chính xác</h4>
-            <p class="statistic-value fs-4 fw-bold m-0">58%</p>
-            <div>&nbsp;</div>
-          </div>
+
+  <section id="statistics-lesstion-selected" class="container">
+    <div class="statistics-content row d-flex justify-content-around">
+      <div class="statistics-card-container w-auto">
+        <div class="statistic-card border d-flex flex-column justify-content-center align-items-center">
+          <i class="fa-solid fa-book fs-5 pt-2"></i>
+          <h4 class="statistic-title fs-6 pt-2">Bài học đã học</h4>
+          <p class="statistic-value fs-4 fw-bold m-0" id="lessons-count">
+            <%= results.length %>
+          </p>
+          <p class="statistic-unit fs-6">bài học</p>
         </div>
       </div>
-    </section>
+      <div class="statistics-card-container w-auto">
+        <div class="statistic-card border d-flex flex-column justify-content-center align-items-center">
+          <i class="fa-regular fa-clock fs-5 pt-2"></i>
+          <h4 class="statistic-title fs-6 pt-2">Thời gian đã học</h4>
+          <p class="statistic-value fs-4 fw-bold m-0" id="total-duration">
+            <%= totalDuration %>
+          </p>
+          <p class="statistic-unit fs-6">phút</p>
+        </div>
+      </div>
+      <div class="statistics-card-container w-auto">
+        <div class="statistic-card border d-flex flex-column justify-content-center align-items-center">
+          <i class="fa-solid fa-crosshairs fs-5 pt-2"></i>
+          <h4 class="statistic-title fs-6 pt-2">Độ chính xác</h4>
+          <p class="statistic-value fs-4 fw-bold m-0" id="accuracy">
+            <%= correct %> %
+          </p>
+          <div>&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </section>
     <section class="widget-wrapper container">
       <div class="skeleton-component d-flex flex-row py-5">
-        <div class="mx-5">
-          <h5 class="skeleton-component">Số học</h5>
-          <div class="skeleton-bar"></div>
-        </div>
+          <div class="mx-5 numerals" >
+            <h5 class="skeleton-component activeNumOrGeo">Số học</h5>
+            <div class="skeleton-bar active-skeleton-bar"></div>
+          </div>
         <!-- SUY NGHI THEM VE ACTIVE -->
-        <div class="mx-5 active">
+        <div class="mx-5 geometry">
           <h5 class="skeleton-component">Hình học</h5>
-          <div class="skeleton-bar-blue"></div>
+          <div class="skeleton-bar"></div>
         </div>
       </div>
 
-      <section class="statistics-row">
+      <section id="statistics-row">
         <div
           class="statistics-container d-flex flex-row justify-content-between">
           <div
@@ -158,7 +158,7 @@
               class="statistics-item-color statistics-item-text fs-6 pt-4 w-50 text-center mb-1">Số
               bài học
               đã học</p>
-            <p class="statistics-item-value fs-4 fw-bold m-0">3</p>
+            <p class="statistics-item-value fs-4 fw-bold m-0"><%= totalLessonsLearned %></p>
             <p class="statistics-item-text fs-6">bài học</p>
           </div>
           <div
@@ -167,16 +167,14 @@
               class="statistics-item-color statistics-item-text fs-6 pt-2 w-50 text-center mb-1">Độ
               chính
               xác</p>
-            <p class="statistics-item-value fs-4 fw-bold m-0">60%</p>
+            <p class="statistics-item-value fs-4 fw-bold m-0"><%= accuracy %>%</p>
             <div>&nbsp;</div>
           </div>
           <div
-            class="statistics-item border d-flex flex-column justify-content-center align-items-center">
+            class="statistics-item border d-flex flex-column justify-content-center align-items-center">Thơi gian trung bình
             <p
-              class="statistics-item-color statistics-item-text fs-6 pt-2 w-50 text-center mb-1">Thời
-              gian
-              trung bình</p>
-            <p class="statistics-item-value fs-4 fw-bold m-0">0:40:53</p>
+              class="statistics-item-color statistics-item-text fs-6 pt-2 w-50 text-center mb-1"></p>
+            <p class="statistics-item-value fs-4 fw-bold m-0"><%= avgTime %></p>
             <div>&nbsp;</div>
           </div>
           <div
@@ -185,7 +183,7 @@
               class="statistics-item-color statistics-item-text fs-6 pt-2 w-50 text-center mb-1">Điểm
               trung
               bình</p>
-            <p class="statistics-item-value fs-4 fw-bold m-0">7.5/10</p>
+            <p class="statistics-item-value fs-4 fw-bold m-0"><%= avgScore %>/10</p>
             <div>&nbsp;</div>
           </div>
           <div
@@ -194,7 +192,7 @@
               class="statistics-item-color statistics-item-text fs-6 pt-2 w-50 text-center mb-1">Điểm
               cao
               nhất</p>
-            <p class="statistics-item-value fs-4 fw-bold m-0">10</p>
+            <p class="statistics-item-value fs-4 fw-bold m-0"><%= highestScore %></p>
             <div>&nbsp;</div>
           </div>
         </div>
@@ -213,35 +211,19 @@
                 <th scope="col">Chi tiết bài học</th>
               </tr>
             </thead>
-            <tbody class="pt-2 table-content">
-              <tr class="table-details table-danger padded-row">
-                <th scope="row" class="text-align-table">1</th>
-                <td class="text-align-table">Số cộng</td>
-                <td>0:45:25</td>
-                <td>@18/05/2024 19:00</td>
-                <td>14/20 (Điểm: 7)</td>
-                <td><a href="#" class="text-decoration-none">Chi tiết bài
-                    học</a></td>
-              </tr>
-              <tr class="table-details table-danger padded-row">
-                <th scope="row">1</th>
-                <td>Số cộng</td>
-                <td>0:45:25</td>
-                <td>@18/05/2024 19:00</td>
-                <td>14/20 (Điểm: 7)</td>
-                <td><a href="#" class="text-decoration-none">Chi tiết bài
-                    học</a></td>
-              </tr>
-              <tr class="table-details table-danger padded-row">
-                <th scope="row">1</th>
-                <td>Số cộng</td>
-                <td>0:45:25</td>
-                <td>@18/05/2024 19:00</td>
-                <td>14/20 (Điểm: 7)</td>
-                <td><a href="#" class="text-decoration-none">Chi tiết bài
-                    học</a></td>
-              </tr>
-            </tbody>
+            <% resultSorted.forEach((result, index) => { %>
+              <tbody class="pt-2 table-content">
+                <tr class="table-details table-danger padded-row">
+                  <th scope="row" class="text-align-table"><%= index + 1 %></th>
+                  <td class="text-align-table"><%= result.lessonName %></td>
+                  <td><%= result.time %></td>
+                  <td><%= result.createAt.toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }).split(",")[0] %></td>
+                  <td><%= result.score %></td>
+                  <td><a href="/StudyPage/<%= result.lessonID %>" class="text-decoration-none">Làm
+                    lại</a></td>
+                </tr>
+              </tbody>
+            <% }); %>
           </table>
         </div>
         <div class="view-all-table">
@@ -263,23 +245,164 @@
           team</small>
       </div>
     </footer>
-
     <script>
       const userDetailsButton = document.querySelector('.user-details-button');
       const userDetailsContainer = document.querySelector('.user-details-container');
       userDetailsButton.addEventListener('click', function () {
-          userDetailsContainer.classList.toggle('active');
+        userDetailsContainer.classList.toggle('active');
       });
-
-      function sumTimeLessons() {
-          let total = 0;
-          
-          for (let i = 0; i < results.length; i++) {
-              const results = results[i];
-              total += parseInt(results.textContent);
+    
+      const numerals = document.querySelector('.numerals');
+      const geometry = document.querySelector('.geometry');
+      const titleNumerals = document.querySelector('.numerals > h5');
+      const skeletonNumerals = document.querySelector('.numerals > div');
+      const titleGeometry = document.querySelector('.geometry > h5');
+      const skeletonGeometry = document.querySelector('.geometry > div');
+      const filterLessonByTimeBtn = document.querySelector('.search-button-lesson');
+      
+      numerals.addEventListener('click', function () {
+        titleNumerals.classList.add('activeNumOrGeo');
+        titleGeometry.classList.remove('activeNumOrGeo');
+        skeletonNumerals.classList.add('active-skeleton-bar');
+        skeletonGeometry.classList.remove('active-skeleton-bar');
+        changeLessonType('Số học')();
+      });
+    
+      geometry.addEventListener('click', function () {
+        titleNumerals.classList.remove('activeNumOrGeo');
+        titleGeometry.classList.add('activeNumOrGeo');
+        skeletonNumerals.classList.remove('active-skeleton-bar');
+        skeletonGeometry.classList.add('active-skeleton-bar');
+        changeLessonType('Hình học')();
+      });
+    
+      function changeLessonType(type) {
+        return function (event) {
+          if (event) {
+            event.preventDefault();
           }
-          return total;
+          const userId = '<%= userId %>';
+          const timeLession = document.getElementById('time-lession').value;
+          const url = `/AnalyzePage/${userId}?time=${encodeURIComponent(timeLession)}&type=${encodeURIComponent(type)}`;
+    
+          fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.text())
+          .then(data => {
+            const container = document.createElement('div');
+            container.innerHTML = data;
+            const statisticsContainer = container.querySelector('.statistics-container');
+            document.getElementById('statistics-row').innerHTML = statisticsContainer.outerHTML;
+    
+            const container2 = document.createElement('div');
+            container2.innerHTML = data;
+            const summaryTableContainer = container2.querySelector('.bdr');
+            document.getElementById('lesson-summary-table').innerHTML = summaryTableContainer.outerHTML;
+            history.pushState(null, '', url);
+
+            if (type === 'Số học') {
+              titleNumerals.classList.add('activeNumOrGeo');
+              titleGeometry.classList.remove('activeNumOrGeo');
+              skeletonNumerals.classList.add('active-skeleton-bar');
+              skeletonGeometry.classList.remove('active-skeleton-bar');
+            } else if (type === 'Hình học') {
+              titleNumerals.classList.remove('activeNumOrGeo');
+              titleGeometry.classList.add('activeNumOrGeo');
+              skeletonNumerals.classList.remove('active-skeleton-bar');
+              skeletonGeometry.classList.add('active-skeleton-bar');
+            }
+          })
+          .catch(error => console.error('Error:', error));
         }
-  </script>
+      }
+    
+      document.querySelector('.filter-text').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const timeLession = document.getElementById('time-lession').value;
+        const type = 'Số học'; // Provide a default type or determine dynamically
+        const userId = '<%= userId %>';
+        const url = `/AnalyzePage/${userId}?time=${encodeURIComponent(timeLession)}&type=${encodeURIComponent(type)}`;
+    
+        fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.text())
+        .then(data => {
+          const container3 = document.createElement('div');
+          container3.innerHTML = data;
+          const statisticAllData = container3.querySelector('.statistics-content');
+          document.getElementById('statistics-lesstion-selected').innerHTML = statisticAllData.outerHTML;
+    
+          const container = document.createElement('div');
+          container.innerHTML = data;
+          const statisticsContainer = container.querySelector('.statistics-container');
+          document.getElementById('statistics-row').innerHTML = statisticsContainer.outerHTML;
+    
+          const container2 = document.createElement('div');
+          container2.innerHTML = data;
+          const summaryTableContainer = container2.querySelector('.bdr');
+          document.getElementById('lesson-summary-table').innerHTML = summaryTableContainer.outerHTML;
+          history.pushState(null, '', url);
+
+          if (type === 'Số học') {
+            titleNumerals.classList.add('activeNumOrGeo');
+            titleGeometry.classList.remove('activeNumOrGeo');
+            skeletonNumerals.classList.add('active-skeleton-bar');
+            skeletonGeometry.classList.remove('active-skeleton-bar');
+          } else if (type === 'Hình học') {
+            titleNumerals.classList.remove('activeNumOrGeo');
+            titleGeometry.classList.add('activeNumOrGeo');
+            skeletonNumerals.classList.remove('active-skeleton-bar');
+            skeletonGeometry.classList.add('active-skeleton-bar');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      });
+    
+      window.addEventListener('popstate', function (event) {
+        location.reload();
+      });
+    </script>
+    
+    
+    <!-- document.querySelector('.filter-text').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const timeLession = document.getElementById('time-lession').value;
+      const userId = '<%= userId %>';
+      const url = `/AnalyzePage/${userId}?time-lession=${encodeURIComponent(timeLession)}`;
+      
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.text())  // Assume response is HTML
+      .then(data => {
+        const container = document.createElement('div');
+        container.innerHTML = data;
+        const statisticsContainer = container.querySelector('.statistics-container');
+        document.getElementById('statistics-row').innerHTML = statisticsContainer.outerHTML;
+  
+        const container2 = document.createElement('div');
+        container2.innerHTML = data;
+        const summaryTableContainer = container2.querySelector('.bdr');
+        document.getElementById('lesson-summary-table').innerHTML = summaryTableContainer.outerHTML;
+        history.pushState(null, '', url);
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  
+    window.addEventListener('popstate', function(event) {
+      location.reload();
+    }); -->
+      
   </body>
 </html>
