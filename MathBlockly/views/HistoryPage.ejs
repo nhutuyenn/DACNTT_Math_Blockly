@@ -12,7 +12,7 @@
     <title>History Page</title>
 </head>
 
-<body>
+<body style="background-color: #FAFAFA;">
     <header class="p-3 text-white position-relative">
         <row>
             <div class="d-flex justify-content-between align-items-center mx-auto">
@@ -73,7 +73,7 @@
             </ul>
         </nav>
     </header>
-    <div class="container mt-5">
+    <div class="container" >
         <section class="title-history-container container d-flex justify-content-between">
             <div class="d-flex flex-row">
                 <div>
@@ -93,17 +93,17 @@
             </div>
         </section>
         <!-- Search Form -->
-        <form class="d-flex mt-4" role="search">
+        <form method="post" class="d-flex mt-4" role="search">
             <div class="input-group search-history-lesson-bdr border border-secondary-subtle">
                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
-                <input class="form-control" type="search" placeholder="Tìm kiếm bài học" aria-label="Search">
+                <input class="form-control" type="search" placeholder="Tìm kiếm bài học" aria-label="Search" name="findLesson" id="findLesson" value="">
             </div>
             <div>
-                <button class="search-button-lession border-0 p-2 ms-4 effect-button purple-color text-light"><span
+                <button type="submit" class="search-button-lession border-0 p-2 ms-4 effect-button purple-color text-light"><span
                         class="fs-6 text-light">Tìm kiếm</span></button>
             </div>
         </form>
-        <section id="lesson-history-table" class="pt-5 mt-5 container">
+        <section id="lesson-history-table" class="pt-5 mt-2 container">
             <div class="bdr">
                 <table class="table table-hover table-borderless mx-auto d-table">
                     <thead>
