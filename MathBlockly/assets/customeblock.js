@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   loadCustomblocks();
+
+  document.getElementById('firstBtn').click();
 });
 
 function loadCustomblocks() {
@@ -160,6 +162,16 @@ function loadCustomblocks() {
       var code = 'Hello ' + value_name + '\n';
       return code;
   };*/
+}
+
+function overBtn(btn){
+  btn.style.backgroundColor = "#A5A6F6";
+  btn.style.fontWeight = "bold";
+}
+
+function outBtn(btn){
+  btn.style.backgroundColor = "white";
+  btn.style.fontWeight = "normal";
 }
 
 /*

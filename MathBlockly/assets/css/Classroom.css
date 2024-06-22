@@ -1,0 +1,107 @@
+.headerBtn button {
+    border-radius: 30px;
+    border: none;
+    padding: 6px 12px;
+    width: 120px;
+    color: white;
+}
+
+.effect-button {
+    box-shadow: 3px 5px 4px #00000042;
+}
+
+.fs-14 {
+    font-size: 14px;
+}
+
+.pink-color-bg {
+    background-color: #FCDDEC;
+}
+
+.user-details-button {
+    height: 40px;
+    width: 40px;
+    background-color: #7879F1;
+}
+
+.user-details-container {
+    z-index: 100;
+    right: 155px;
+    bottom: -25px;
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.logIn {
+    background-color: #EF5DA8;
+    border-color: #EF5DA8;
+}
+
+.logIn:hover {
+    background-color: #ee3f99;
+    border-color: #EF5DA8;
+}
+
+.signUp {
+    background-color: #7879F1;
+    border-color: #7879F1;
+}
+
+.signUp:hover {
+    background-color: #4141ee;
+    border-color: #7879F1;
+}
+
+.start {
+    background-color: #5D5FEF;
+    border: none;
+    border-radius: 20px;
+    width: 100px;
+    padding: 5px 0px;
+}
+
+.newCard {
+    background-image: url('https://c4.wallpaperflare.com/wallpaper/707/220/899/gradient-blue-pink-abstract-art-wallpaper-thumb.jpg');
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 1px solid rgb(169, 169, 169);
+    height: 140px;
+}
+
+.breadcrumb {
+    margin-bottom: 0px !important;
+}
+
+.breadcrumb button {
+    background-color: #5D5FEF;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 0px;
+    color: white;
+    text-align: center;
+}
+
+.inlineText {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 230px;
+}
+
+.join-button {
+    color: rgb(33, 213, 33);
+}
+
+.delete-button {
+    color: red;
+    background: none;
+    border: none;
+}
+.modal{
+    background-color: rgba(0, 0, 0, 0) !important;
+}

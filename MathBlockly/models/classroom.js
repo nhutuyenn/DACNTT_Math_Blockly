@@ -1,35 +1,29 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const accountDetailSchema = new mongoose.Schema({
-  userID: {
+const classroomSchema = new mongoose.Schema({
+  teacherID: {
     type: Schema.Types.ObjectId,
     required: [true, 'Username is required'],
     unique: [ true, 'Username already exists'],
   },
 
-  userName: {
+  teacherName: {
     type: String,
     required: [true, 'Username is required'],
   },
 
-  phone:{
+  name:{
     type: String,
+    required: [true, 'Name is required'],
   },
 
-  dateBirth:{
-    type: Date,
-  },
-
-  school:{
+  year:{
     type: String,
+    required: [true, 'Year is required'],
   },
-
-  active:{
-    type: Boolean
-  }
 });
 
-const accountDetails = mongoose.model('accountDetails', accountDetailSchema);
+const classroom = mongoose.model('classroom', classroomSchema);
 
-module.exports = accountDetails;
+module.exports = classroom;

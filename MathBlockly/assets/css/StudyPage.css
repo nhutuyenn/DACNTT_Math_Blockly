@@ -57,11 +57,13 @@
 
 .exercise button{
     width: 30px;
+    background-color: #ffffff;
 }
 
-.exercise button:hover{
-    background-color: #A5A6F6;
-    font-weight: bold;
+.effect-button:hover{
+    background-color: #A5A6F6 !important;
+    font-weight: bold !important;
+
 }
 
 .submitBtn{
