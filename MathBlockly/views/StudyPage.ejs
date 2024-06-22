@@ -15,6 +15,7 @@
     <script src="../node_modules/blockly/blockly_compressed.js"></script>
     <script src="../node_modules/blockly/blocks_compressed.js"></script>
     <script src="../node_modules/blockly/msg/vi.js"></script>
+    <script src="../assets/customeblock.js"></script>
 
     <title>Study Page</title>
 </head>
@@ -103,34 +104,26 @@
 
                     <div class="col-md-3 col-12 ps-5">
                         <div class="exercise">
-                            <button type="button" onclick="changeQuestion(this,1)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">1</button>
-                            <button type="button" onclick="changeQuestion(this, 2)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">2</button>
-
-                            <button type="button" onclick="changeQuestion(this, 3)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">3</button>
-
+                            <button type="button" mouseover="overBtn(this)" mouseout="outBtn(this)" onclick="changeQuestion(this,1)"
+                                class="col-3 m-1 border rounded-2 effect-button " value="1" id="firstBtn">1</button>
+                            <button type="button" mouseover="overBtn(this)" mouseout="outBtn(this)"  onclick="changeQuestion(this, 2)"
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">2</button>
+                            <button type="button" mouseover="overBtn(this)" mouseout="outBtn(this)" onclick="changeQuestion(this, 3)"
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">3</button>
                             <button type="button" onclick="changeQuestion(this, 4)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">4</button>
-
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">4</button>
                             <button type="button" onclick="changeQuestion(this, 5)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">5</button>
-
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">5</button>
                             <button type="button" onclick="changeQuestion(this, 6)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">6</button>
-
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">6</button>
                             <button type="button" onclick="changeQuestion(this, 7)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">7</button>
-
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">7</button>
                             <button type="button" onclick="changeQuestion(this, 8)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">8</button>
-
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">8</button>
                             <button type="button" onclick="changeQuestion(this, 9)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">9</button>
-
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">9</button>
                             <button type="button" onclick="changeQuestion(this, 10)"
-                                class="col-3 m-1 border rounded-2 effect-button answerBtn" value="1">10</button>
+                                class="col-3 m-1 border rounded-2 effect-button " value="1">10</button>
 
                         </div>
                         <div class="text-center">
@@ -159,11 +152,11 @@
         </div>
     </footer>
 
-    <script src="../assets/customeblock.js"></script>
     <script>
         var countdownTime = 15 * 60
         var countdownInterval = setInterval(updateCountdown, 1000);
         var i = 1;
+        let btn;
         var objects = {};
 
         const userDetailsButton = document.querySelector('.user-details-button');
@@ -202,6 +195,14 @@
 
             let questionBlocks = Blockly.getMainWorkspace().getBlocksByType('block');
 
+            if (btn !== undefined) {
+                btn.style.backgroundColor = "#FFFFFF";
+                btn.style.fontWeight = "normal";
+            }
+
+            button.style.backgroundColor = "#A5A6F6";
+            button.style.fontWeight = "bold";
+
             lesson.innerHTML = questionsElement[num - 1].direction;
             document.getElementById("question").innerHTML = questionsElement[num - 1].question;
 
@@ -211,13 +212,13 @@
                 questionBlocks = Blockly.getMainWorkspace().getAllBlocks();
 
                 if (questionBlocks.length > 0) {
-                    if(questionBlocks[0].type === "logic_compare"){
+                    if (questionBlocks[0].type === "logic_compare") {
                         tmp = tmp + questionBlocks[0].getFieldValue('OP') + " "
                     }
-                    else if(questionBlocks[0].type === "logic_boolean"){
+                    else if (questionBlocks[0].type === "logic_boolean") {
                         tmp = tmp + questionBlocks[0].getFieldValue('BOOL') + " "
                     }
-                    else if(questionBlocks[0].type === "math_number"){
+                    else if (questionBlocks[0].type === "math_number") {
                         tmp = tmp + questionBlocks[0].getFieldValue('NUM') + " "
                     }
                     else
@@ -229,7 +230,7 @@
                 const childs = block.getChildren()
                 if (childs.length > 0) {
                     for (const child of childs) {
-                        if(child.type === "math_number"){
+                        if (child.type === "math_number") {
                             tmp = tmp + child.getFieldValue('NUM') + " "
                         }
                         else {
@@ -270,6 +271,8 @@
                 newBlock.render();
                 newBlock.moveTo(blockCoordinates)
             }
+
+            btn = button;
         }
 
         async function onSubmitForm() {

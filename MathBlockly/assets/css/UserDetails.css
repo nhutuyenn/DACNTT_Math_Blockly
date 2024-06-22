@@ -37,10 +37,6 @@ footer {
 
 .logIn{
     background-color: #EF5DA8;
-
-
-     
-    
     border: none;
 }
 
@@ -157,7 +153,6 @@ footer {
 .avt-uploadImg-container {
     box-shadow: 8px 7px 13px #3f3f3f50;
     height: 250px;
-    width: 250px;
     border-radius: 12px;
 }
 
@@ -165,10 +160,7 @@ footer {
     margin-left: 5rem !important;
 }
 
-.account-info-container{
-    height: 550px;
-    width: 800px;
-}
+
 
 .horizontal-ladder{
     height: 1px;
@@ -176,8 +168,9 @@ footer {
 }
 
 .field-value{
-    width: 420px;
-    margin-right: 120px;
+    width: 80%;
+    margin-bottom: 10px;
+    padding: 10px 20px !important;
 }
 
 .save-button-user-info {
