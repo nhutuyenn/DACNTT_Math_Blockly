@@ -52,19 +52,17 @@ app.get('*', checkUser);
 
 app.get('/', async (req, res) => {
     const token = req.cookies.jwt;
-
     if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
+        // Redirect to login page if no token is provided
+        return res.redirect('/home');
     }
-
-    let userId;
     try {
-        const decoded = jwt.verify(token, 'secret');
-        userId = decoded.id;
-    } catch (err) {
-        return res.status(401).send({ error: 'Invalid token' });
+        const userId = jwt.verify(token, 'secret').id;
+        res.render('HomePage', { userId });
+    } catch (error) {
+        // Redirect to login page if token is invalid
+        return res.redirect('/home');
     }
-    res.render('HomePage', { userId });
 })
 
 app.get('/StudyPage/:id', async (req, res) => {
@@ -299,20 +297,21 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
 
 app.get('/home', (req, res) => {
     const token = req.cookies.jwt;
-
     if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
+        // Redirect to login page if no token is provided
+        // Use return here to exit the function after sending the response
+        return res.render('HomePage');
     }
-
-    let userId;
     try {
-        const decoded = jwt.verify(token, 'secret');
-        userId = decoded.id;
-    } catch (err) {
-        return res.status(401).send({ error: 'Invalid token' });
+        const userId = jwt.verify(token, 'secret').id;
+        // Render HomePage with userId and return immediately after
+        return res.render('HomePage', { userId });
+    } catch (error) {
+        // Redirect to login page if token is invalid
+        // Use return here as well
+        return res.render('HomePage');
     }
-    res.render('HomePage', { userId });
-})
+});
 
 app.get('/UserDetails', async (req, res) => {
     const token = req.cookies.jwt;
