@@ -34,7 +34,7 @@
                     </div>
                     <div class="user-details-container rounded-4 pink-color-bg effect-button position-absolute">
                         <div class="user-details-link px-4 pt-3 pb-2">
-                            <a href="#" class="text-decoration-none text-dark">
+                            <a href="/UserDetails" class="text-decoration-none text-dark">
                                 <i class="fa-solid fa-user fs-14 me-2"></i>
                                 <span class="fs-14">Trang cá nhân</span>
                             </a>
@@ -58,7 +58,7 @@
                         <% } %>
             </div>
         </row>
-        <nav class="navbar navbar-expand-sm bg-light justify-content-center">
+        <nav class="navbar navbar-expand-sm justify-content-center">
             <ul class="navbar-nav">
                 <li class="nav-item px-5">
                     <a class="nav-link" href="/">Về LeMath</a>
@@ -70,7 +70,7 @@
                     <a class="nav-link" href="/HistoryPage">Lịch sử học</a>
                 </li>
                 <li class="nav-item px-5">
-                    <a class="nav-link" href="/AnalyzePage">Thống kê</a>
+                    <a class="nav-link active" href="/AnalyzePage/${encodeURIComponent('userId')}">Thống kê</a>
                 </li>
             </ul>
         </nav>
@@ -80,9 +80,11 @@
         <div class="col-10 justify-content-center mx-auto">
             <div class="position-relative breadcrumb mt-3">
                 <h6>Lớp học</h6>
-                <div class="position-absolute top-0 end-0">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#addClassModel">+</button>
-                </div>
+                <% if(user[0].role==='teacher' ) { %>
+                    <div class="position-absolute top-0 end-0">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#addClassModel">+</button>
+                    </div>
+                    <% } %>
             </div>
             <div class="row">
                 <% classrooms.forEach(classroom=> { %>
@@ -101,16 +103,18 @@
                                     </h6>
                                 </div>
                             </div>
-                            <div class="px-3 py-2">
-                                <p class="inlineText">31 học viên</p>
-                                <div class="d-flex justify-content-between">
-                                    <a href="/ClassroomDetail/<%= classroom._id %>"><i style="font-size: 28px;"
-                                            class="bi bi-box-arrow-in-right join-button"></i></a>
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#myModal"
-                                        class="delete-button" value="<%= classroom._id %>"><i style="font-size: 23px;"
-                                            class="bi bi-ban"></i></i></button>
+                                <div class="px-3 py-2" style="min-height: 50px;">
+                                    <% if(user[0].role==='teacher' ) { %>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="/ClassroomDetail/<%= classroom._id %>"><i style="font-size: 28px;"
+                                                class="bi bi-box-arrow-in-right join-button"></i></a>
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#myModal"
+                                            class="delete-button" value="<%= classroom._id %>"><i
+                                                style="font-size: 23px;" class="bi bi-ban"></i></i></button>
+                                    </div>
+                                    <% } %>
+
                                 </div>
-                            </div>
                         </div>
                     </div>
                     <% }); %>

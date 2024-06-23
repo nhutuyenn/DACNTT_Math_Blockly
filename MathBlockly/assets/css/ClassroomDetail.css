@@ -116,3 +116,14 @@ table a{
     background-color: #5D5FEF;
     padding: 10px 20px;
 }
+
+td button{
+    border: none;
+    background-color: none;
+    background: none;
+    padding: 0px 0px;
+}
+
+a{
+    margin: 0px 0px !important;
+}

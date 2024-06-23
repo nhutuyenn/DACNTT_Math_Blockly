@@ -30,7 +30,7 @@
                 </div>
                 <div class="user-details-container rounded-4 pink-color-bg effect-button position-absolute">
                     <div class="user-details-link px-4 pt-3 pb-2">
-                        <a href="#" class="text-decoration-none text-dark">
+                        <a href="/UserDetails" class="text-decoration-none text-dark">
                             <i class="fa-solid fa-user fs-14 me-2"></i>
                             <span class="fs-14">Trang cá nhân</span>
                         </a>
@@ -55,7 +55,7 @@
           </div>
       </row>
 
-      <nav class="navbar navbar-expand-sm bg-light justify-content-center">
+      <nav class="navbar navbar-expand-sm justify-content-center">
           <ul class="navbar-nav">
               <li class="nav-item px-5">
                   <a class="nav-link fw-bold " href="/">Về LeMath</a>
@@ -251,7 +251,7 @@
       userDetailsButton.addEventListener('click', function () {
         userDetailsContainer.classList.toggle('active');
       });
-    
+
       const numerals = document.querySelector('.numerals');
       const geometry = document.querySelector('.geometry');
       const titleNumerals = document.querySelector('.numerals > h5');
@@ -259,7 +259,7 @@
       const titleGeometry = document.querySelector('.geometry > h5');
       const skeletonGeometry = document.querySelector('.geometry > div');
       const filterLessonByTimeBtn = document.querySelector('.search-button-lesson');
-      
+
       numerals.addEventListener('click', function () {
         titleNumerals.classList.add('activeNumOrGeo');
         titleGeometry.classList.remove('activeNumOrGeo');
@@ -267,7 +267,7 @@
         skeletonGeometry.classList.remove('active-skeleton-bar');
         changeLessonType('Số học')();
       });
-    
+
       geometry.addEventListener('click', function () {
         titleNumerals.classList.remove('activeNumOrGeo');
         titleGeometry.classList.add('activeNumOrGeo');
@@ -275,7 +275,7 @@
         skeletonGeometry.classList.add('active-skeleton-bar');
         changeLessonType('Hình học')();
       });
-    
+
       function changeLessonType(type) {
         return function (event) {
           if (event) {
@@ -284,7 +284,7 @@
           const userId = '<%= userId %>';
           const timeLession = document.getElementById('time-lession').value;
           const url = `/AnalyzePage/${userId}?time=${encodeURIComponent(timeLession)}&type=${encodeURIComponent(type)}`;
-    
+
           fetch(url, {
             method: 'GET',
             headers: {
@@ -297,7 +297,7 @@
             container.innerHTML = data;
             const statisticsContainer = container.querySelector('.statistics-container');
             document.getElementById('statistics-row').innerHTML = statisticsContainer.outerHTML;
-    
+
             const container2 = document.createElement('div');
             container2.innerHTML = data;
             const summaryTableContainer = container2.querySelector('.bdr');
@@ -319,14 +319,14 @@
           .catch(error => console.error('Error:', error));
         }
       }
-    
+
       document.querySelector('.filter-text').addEventListener('submit', function (event) {
         event.preventDefault();
         const timeLession = document.getElementById('time-lession').value;
         const type = 'Số học'; // Provide a default type or determine dynamically
         const userId = '<%= userId %>';
         const url = `/AnalyzePage/${userId}?time=${encodeURIComponent(timeLession)}&type=${encodeURIComponent(type)}`;
-    
+
         fetch(url, {
           method: 'GET',
           headers: {
@@ -339,12 +339,12 @@
           container3.innerHTML = data;
           const statisticAllData = container3.querySelector('.statistics-content');
           document.getElementById('statistics-lesstion-selected').innerHTML = statisticAllData.outerHTML;
-    
+
           const container = document.createElement('div');
           container.innerHTML = data;
           const statisticsContainer = container.querySelector('.statistics-container');
           document.getElementById('statistics-row').innerHTML = statisticsContainer.outerHTML;
-    
+
           const container2 = document.createElement('div');
           container2.innerHTML = data;
           const summaryTableContainer = container2.querySelector('.bdr');
@@ -365,7 +365,7 @@
         })
         .catch(error => console.error('Error:', error));
       });
-    
+
       window.addEventListener('popstate', function (event) {
         location.reload();
       });

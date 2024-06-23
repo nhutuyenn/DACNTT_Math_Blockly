@@ -5,11 +5,11 @@ const mongoose = require('mongoose');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const { checkUser, authenticateToken } = require('./middlewares/authMiddlewares');
-const { 
-    calculateTotalDuration, 
-    totalCorrect, 
-    getTotalLessonsByType, 
-    calculateAccuracy, 
+const {
+    calculateTotalDuration,
+    totalCorrect,
+    getTotalLessonsByType,
+    calculateAccuracy,
     calculateAverageLessonTime ,
     calculateAverageScore,
     calculateHighestScore,
@@ -24,6 +24,7 @@ const AnswerModel = require('./models/answers');
 const ResultModel = require('./models/result');
 const ValidationModel = require('./models/validation');
 const ClassroomModel = require('./models/classroom')
+const UserModel = require('./models/User');
 const AccountModel = require('./models/accountDetail');
 const response = require('./models/response');
 
@@ -138,13 +139,34 @@ app.post('/StudyPage/:id', async (req, res) => {
 app.get('/HistoryPage', async (req, res) => {
     const token = req.cookies.jwt;
     const userID = jwt.verify(token, 'secret').id;
-    const results = await ResultModel.find({ accountID: userID });
-
     const user = await UserModel.find({ _id: userID });
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
+    res.redirect('/HistoryPage/' + userID);
+})
+
+app.get('/HistoryPage/:id', async (req, res) => {
+    const id = req.params.id;
+    const results = await ResultModel.find({ accountID: id });
     res.render('HistoryPage', { results });
+})
+
+app.post('/HistoryPage/:id', async (req, res) => {
+    const token = req.cookies.jwt;
+    const userID = jwt.verify(token, 'secret').id;
+    const id = req.params.id;
+    const findLesson = req.body.findLesson;
+    const user = await UserModel.find({ _id: userID });
+
+    var results;
+
+    console.log(findLesson);
+    if (findLesson)
+        results = await ResultModel.find({ accountID: id, lessonName: findLesson });
+    else
+        results = await ResultModel.find({ accountID: id });
+    res.render('HistoryPage', { results, user});
 })
 
 app.get('/LessonPage', async (req, res) => {
@@ -223,7 +245,7 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
     const correct = await totalCorrect(results);
     const lessons = await LessonModel.find({ type: typeofLesson });
     const lessonIds = lessons.map(lesson => lesson._id);
-    const resultSorted = await ResultModel.find({ 
+    const resultSorted = await ResultModel.find({
         accountID: userId,
         lessonID: { $in: lessonIds },
         createAt: { $gte: startDate, $lt: endDate }
@@ -329,7 +351,7 @@ app.get('/Classroom', async (req, res) => {
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
-    res.render('Classroom', {classrooms});
+    res.render('Classroom', {classrooms, user});
 })
 
 app.post('/Classroom', async (req, res) => {
@@ -370,18 +392,59 @@ app.post('/deleteClass', async (req, res) => {
     }
 })
 
+app.post('/addStudent', async (req, res) => {
+    try{
+        const { classroomId, studentId } = req.body;
+        const student = await UserModel.find({ _id: studentId });
+        if (student.length > 0) {
+            if (student[0].active === true) {
+                await UserModel.updateOne({ _id: studentId }, {
+                    $addToSet: {
+                        classroomID: classroomId
+                    }
+                })
+            }
+        }
+        res.status(200).json({ message: 'Classroom deleted successfully' });
+    }
+    catch(error){
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
+
+app.post('/deleteStudent', async (req, res) => {
+    try{
+        const { classroomId, studentId } = req.body;
+        await UserModel.updateOne({ _id: studentId }, {
+            $pull: {
+                classroomID: classroomId
+            }
+        })
+        res.status(200).json({ message: 'Classroom deleted successfully' });
+    }
+    catch(error){
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
+
 app.get('/ClassroomDetail/:id', async (req, res) => {
     const token = req.cookies.jwt;
     const userID = jwt.verify(token, 'secret').id;
     const user = await UserModel.find({ _id: userID });
-
     const id = req.params.id;
     const users = await UserModel.find({ classroomID: id });
-    console.log(users)
+    const classroom = await ClassroomModel.findOne({ _id: id });
+    console.log(teacher)
+
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
-    res.render('ClassroomDetail', {users});
+    if(user[0].role === "teacher"){
+        res.render('ClassroomDetail', {users, id, classroom, teacher});
+    }
+    else {
+        return res.redirect('/');
+    }
 })
 
 app.listen(port, () => {

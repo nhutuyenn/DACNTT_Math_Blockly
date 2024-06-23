@@ -35,6 +35,18 @@ footer {
     color: white;
 }
 
+.effect-button{
+    box-shadow: 3px 5px 4px #00000042;
+}
+
+.fs-14 {
+    font-size: 14px;
+}
+
+.pink-color-bg {
+    background-color: #FCDDEC;
+}
+
 .logIn{
     background-color: #EF5DA8;
     border: none;
@@ -176,4 +188,21 @@ footer {
 .save-button-user-info {
     bottom: 75px !important;
     right: 145px !important;
+}
+
+.user-details-button {
+    height: 40px;
+    width: 40px;
+    background-color: #7879F1;
+}
+
+.user-details-container{
+    z-index: 100;
+    right: 165px;
+    top: 80px;
+    display: none;
+}
+
+.active {
+    display: block;
 }
