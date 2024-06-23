@@ -318,7 +318,7 @@ app.get('/Classroom', async (req, res) => {
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
-    res.render('Classroom', {classrooms});
+    res.render('Classroom', {classrooms, user});
 })
 
 app.post('/Classroom', async (req, res) => {
@@ -401,11 +401,17 @@ app.get('/ClassroomDetail/:id', async (req, res) => {
     const id = req.params.id;
     const users = await UserModel.find({ classroomID: id });
     const classroom = await ClassroomModel.findOne({ _id: id });
+    console.log(teacher)
 
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
-    res.render('ClassroomDetail', {users, id, classroom});
+    if(user[0].role === "teacher"){
+        res.render('ClassroomDetail', {users, id, classroom, teacher});
+    }
+    else {
+        return res.redirect('/');
+    }
 })
 
 app.listen(port, () => {

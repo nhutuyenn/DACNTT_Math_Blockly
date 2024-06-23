@@ -46,7 +46,12 @@ const userSchema = new mongoose.Schema({
 
   classroomID: [{
     type: Schema.Types.ObjectId,
-  }]
+  }],
+
+  role: {
+    type: String,
+    default: 'student'
+  }
 });
 
 // Pre-save hook to hash password
