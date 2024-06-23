@@ -215,7 +215,10 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
             break;
     }
 
-    const results = await ResultModel.find({ accountID: userId , createAt: { $gte: startDate, $lt: endDate }});
+    const results = await ResultModel.find({ 
+        accountID: userId , 
+        createAt: { $gte: startDate, $lt: endDate }
+    });
     const totalDuration = await calculateTotalDuration(results);
     const correct = await totalCorrect(results);
     const lessons = await LessonModel.find({ type: typeofLesson });
@@ -233,10 +236,40 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
     const highestScore = await calculateHighestScore(userId, typeofLesson, { startDate, endDate });
 
     if (req.xhr) { // If the request is an AJAX request
-        const partialHtml = await renderPartial('./views/templates/statistics-row.ejs', './views/templates/statistics-table.ejs', './views/templates/render-content-analyze.ejs', { results, lessons, totalDuration, resultSorted, correct, userId, totalLessonsLearned, typeofLesson, accuracy, avgTime, avgScore, highestScore });
+        const partialHtml = await renderPartial(
+            './views/templates/statistics-row.ejs', 
+            './views/templates/statistics-table.ejs', 
+            './views/templates/render-content-analyze.ejs', 
+            { 
+                results, 
+                lessons, 
+                totalDuration, 
+                resultSorted, 
+                correct, 
+                userId, 
+                totalLessonsLearned, 
+                typeofLesson, 
+                accuracy, 
+                avgTime, 
+                avgScore, 
+                highestScore 
+            });
         res.json({ html: partialHtml });
     } else {
-        res.render('AnalyzePage', { results, lessons, totalDuration, resultSorted, correct, userId, totalLessonsLearned, typeofLesson, accuracy, avgTime, avgScore, highestScore });
+        res.render('AnalyzePage', { 
+            results, 
+            lessons, 
+            totalDuration, 
+            resultSorted, 
+            correct, 
+            userId, 
+            totalLessonsLearned, 
+            typeofLesson, 
+            accuracy, 
+            avgTime, 
+            avgScore, 
+            highestScore 
+        });
     }
 });
 

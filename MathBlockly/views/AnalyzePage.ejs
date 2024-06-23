@@ -369,40 +369,6 @@
       window.addEventListener('popstate', function (event) {
         location.reload();
       });
-    </script>
-    
-    
-    <!-- document.querySelector('.filter-text').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const timeLession = document.getElementById('time-lession').value;
-      const userId = '<%= userId %>';
-      const url = `/AnalyzePage/${userId}?time-lession=${encodeURIComponent(timeLession)}`;
-      
-      fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => response.text())  // Assume response is HTML
-      .then(data => {
-        const container = document.createElement('div');
-        container.innerHTML = data;
-        const statisticsContainer = container.querySelector('.statistics-container');
-        document.getElementById('statistics-row').innerHTML = statisticsContainer.outerHTML;
-  
-        const container2 = document.createElement('div');
-        container2.innerHTML = data;
-        const summaryTableContainer = container2.querySelector('.bdr');
-        document.getElementById('lesson-summary-table').innerHTML = summaryTableContainer.outerHTML;
-        history.pushState(null, '', url);
-      })
-      .catch(error => console.error('Error:', error));
-    });
-  
-    window.addEventListener('popstate', function(event) {
-      location.reload();
-    }); -->
-      
+    </script>  
   </body>
 </html>
