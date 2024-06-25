@@ -172,7 +172,7 @@ app.get('/LessonPage', async (req, res) => {
     const token = req.cookies.jwt;
 
     if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
+        return res.redirect('/home');
     }
 
     let userId;
@@ -180,7 +180,7 @@ app.get('/LessonPage', async (req, res) => {
         const decoded = jwt.verify(token, 'secret');
         userId = decoded.id;
     } catch (err) {
-        return res.status(401).send({ error: 'Invalid token' });
+        return res.redirect('/home');
     }
     res.render('LessonPage', { lessons, userId });
 })
@@ -195,7 +195,7 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
     const token = req.cookies.jwt;
 
     if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
+        return res.redirect('/home');
     }
 
     let userId;
@@ -282,6 +282,9 @@ app.get('/home', (req, res) => {
 
 app.get('/UserDetails', async (req, res) => {
     const token = req.cookies.jwt;
+    if (!token) {
+        return res.redirect('/home');
+    }
     const userID = jwt.verify(token, 'secret').id;
     const user = await UserModel.find({ _id: userID });
 
@@ -311,6 +314,9 @@ app.post('/UserDetails', async (req, res) => {
 
 app.get('/Classroom', async (req, res) => {
     const token = req.cookies.jwt;
+    if (!token) {
+        return res.redirect('/home');
+    }
     const userID = jwt.verify(token, 'secret').id;
     const user = await UserModel.find({ _id: userID });
     const classrooms = await ClassroomModel.find({ teacherID: userID });
@@ -395,12 +401,15 @@ app.post('/deleteStudent', async (req, res) => {
 
 app.get('/ClassroomDetail/:id', async (req, res) => {
     const token = req.cookies.jwt;
+    if (!token) {
+        return res.redirect('/home');
+    }
     const userID = jwt.verify(token, 'secret').id;
     const user = await UserModel.find({ _id: userID });
     const id = req.params.id;
     const users = await UserModel.find({ classroomID: id });
     const classroom = await ClassroomModel.findOne({ _id: id });
-    console.log(teacher)
+    const teacher = await UserModel.find({ _id: classroom.teacherID });
 
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
