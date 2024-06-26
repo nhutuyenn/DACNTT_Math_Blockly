@@ -7,25 +7,35 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, 'Username is required'],
-    unique: [true, 'Username already exists'],
+    unique: [true, 'Người dùng đã tồn tại'],
   },
   email: {
     type: String,
     required: [true, 'Email is required'],
-    unique: [true, 'Email already exists'],
+    unique: [true, 'Email đã tồn tại'],
     validate: {
       validator: validator.isEmail,
-      message: 'Please enter a valid email'
+      message: 'Vui lòng nhập email hợp lệ'
     }
   },
   password: {
     type: String,
     required: [true, 'Password is required'],
-    minlength: [6, 'Password must be at least 6 characters']
+    minlength: [6, 'Mật khẩu phải có tối thiểu 6 kí tự']
+  },
+  re_password: {
+    type: String,
+    required: [true, 'Re-Password is required'],
+    validate: {
+      validator: function(value) {
+        return value === this.password;
+      },
+      message: 'Mật khẩu nhập lại không trùng khớp'
+    }
   },
   name: {
     type: String,
-    required: [true, 'Username is required'],
+    // required: [true, 'Username is required'],
   },
 
   phone: {
@@ -51,7 +61,15 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     default: 'student'
-  }
+  },
+  
+  otp: {
+    type: String
+  },
+
+  optExpires: {
+    type: Date
+  },
 });
 
 // Pre-save hook to hash password

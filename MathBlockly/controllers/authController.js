@@ -7,16 +7,6 @@ const createToken = (id) => {
   });
 }
 
-const getUserIdFromToken = (token) => {
-    try {
-      const decoded = jwt.verify(token, 'secret');
-      return decoded.id;
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
-};
-
 module.exports.register_get = (req, res) => {
     res.render('RegisterPage');
 }
@@ -24,20 +14,21 @@ module.exports.register_get = (req, res) => {
 // authController.js
 
 const handleErrors = (err) => {
-  let errors = { email: '', password: '', username: '' };
+  let errors = { email: '', password: '', username: '', re_password: '' };
 
   const errorMessages = {
-      'incorrect email': 'That email is not registered',
-      'incorrect password': 'That password is incorrect',
-      'incorrect username': 'That username is not registered'
+      'incorrect email': 'Email chưa được đăng kí',
+      'incorrect password': 'Mật khẩu không chính xác',
+      'incorrect username': 'Tên người dùng chưa được đăng kí',
+      'incorrect re-password': 'Mật khẩu nhập lại không trùng khớp',
   };
 
   // duplicate email error
   if (err.code === 11000) {
       if (err.keyValue.email) {
-          errors.email = 'Email is already registered';
+          errors.email = 'Email đã được đăng kí';
       } else if (err.keyValue.username) {
-          errors.username = 'Username is already taken';
+          errors.username = 'Tên người dùng đã tồn tại';
       }
       return errors;
   }
@@ -60,7 +51,7 @@ const handleErrors = (err) => {
   
 
 module.exports.register_post = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, re_password } = req.body;
 
     // Kiểm tra xem tất cả các trường đã được điền đủ hay chưa
     // if (!username || !email || !password) {
@@ -69,13 +60,13 @@ module.exports.register_post = async (req, res) => {
 
     try {
         // Kiểm tra xem email đã được sử dụng chưa
-        const existingUser = await User.findOne({ email });
+        // const existingUser = await User.findOne({ email });
         // if (existingUser) {
         //     return res.status(400).json({ error: 'Email đã được sử dụng' });
         // }
 
         // Tạo và lưu user mới vào cơ sở dữ liệu
-        const user = new User({ username, email, password });
+        const user = new User({ username, email, password, re_password });
         await user.save();
 
         const token = createToken(user._id); // Tạo token cho user
@@ -90,8 +81,6 @@ module.exports.register_post = async (req, res) => {
         const errors = handleErrors(error);
         res.status(500).json({ errors });
     }
-
-    console.log(username, email, password);
 };
 
 module.exports.login_get = (req, res) => {

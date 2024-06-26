@@ -73,3 +73,28 @@
 .correctAnswer{
     background-color: #AFEF5D ;
 }
+
+.user-details-button {
+    height: 40px;
+    width: 40px;
+    background-color: #7879F1;
+}
+
+.user-details-container{
+    z-index: 100;
+    right: 220px;
+    top: 80px;
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.pink-color-bg {
+    background-color: #FCDDEC;
+}
+
+.effect-button{
+    box-shadow: 3px 5px 4px #00000042;
+}
