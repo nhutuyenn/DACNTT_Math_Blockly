@@ -61,17 +61,6 @@ app.get('/', async (req, res) => {
     if (!token) {
         // Redirect to login page if no token is provided
         return res.redirect('/home');
-<<<<<<< HEAD
-    }
-    try {
-        const userId = jwt.verify(token, 'secret').id;
-        res.render('HomePage', { userId });
-    } catch (error) {
-        // Redirect to login page if token is invalid
-        return res.redirect('/home');
-    }
-})
-=======
     }
     try {
         const userId = jwt.verify(token, 'secret').id;
@@ -147,19 +136,18 @@ app.get('/reset/:email', (req, res) => {
 app.post('/reset/:email', async (req, res) => {
     const { password } = req.body;
     const user = await UserModel.findOne({ email: req.params.email });
-    
+
     try {
         user.password = password; // Đặt lại mật khẩu mới (được mã hóa bởi middleware 'pre')
         user.otp = undefined;
         user.otpExpires = undefined;
         await user.save();
-    
+
         res.redirect('/login');
     } catch (error) {
         res.render('ResetPassword', { email: req.params.email, error: 'Mật khẩu phải có tối thiểu 6 kí tự' });
     }
 });
->>>>>>> 0cdefac1fd6db32925214bc49a78efa33bbacb6f
 
 app.get('/StudyPage/:id', async (req, res) => {
     const id = req.params.id;
@@ -579,15 +567,11 @@ app.get('/ClassroomDetail/:id', async (req, res) => {
     }
 })
 
-<<<<<<< HEAD
-app.listen(process.env.PORT || 5000, () => {
-=======
 app.get('/forgot', (req, res) => {
     res.render('ForgotPassword');
 });
 
 app.listen(port, () => {
->>>>>>> 0cdefac1fd6db32925214bc49a78efa33bbacb6f
     mongoose
         .connect(MONGO_URL)
         .then(() => console.log("Connect to mongoDB successfully"))
