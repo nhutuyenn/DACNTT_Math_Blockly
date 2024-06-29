@@ -69,13 +69,13 @@
                     <div class="password error"></div>
                     <div class="input-container mt-4 position-relative">
                         <i class="fa-solid fa-lock position-absolute"></i>
-                        <input type="password" name="re-password"
+                        <input type="password" name="re_password"
                             id="re-password"
                             class="border-0 rounded-3 px-5 py-2 effect-button "
                             placeholder="Nhập lại mật khẩu" required>
                     </div>
-                    <div class="re-password error"></div>
-                    <div
+                    <div class="re_password error"></div>
+                    <!-- <div
                         class="rules-off-apps d-flex align-items-start mt-3 position-relative">
                         <input type="checkbox" name="term" value="Term"
                             class="mt-2 position-absolute">
@@ -83,7 +83,7 @@
                             với
                             Điều khoản sử dụng và Chính sách quyền riêng tư của
                             chúng tôi</span>
-                    </div>
+                    </div> -->
                     <button type="submit"
                         class="py-2 fw-medium rounded-4 border-0 red-color text-light mt-5">Đăng
                         kí</button>
@@ -114,9 +114,9 @@
             const form = document.querySelector("form");
 
             const userError = document.querySelector(".username.error")
-
             const emailError = document.querySelector(".email.error")
             const passwordError = document.querySelector(".password.error")
+            const repasswordError = document.querySelector(".re_password.error")
 
             form.addEventListener("submit", async (event) => {
                 event.preventDefault();
@@ -124,10 +124,12 @@
                 userError.textContent = "";
                 emailError.textContent = "";
                 passwordError.textContent = "";
+                repasswordError.textContent = "";
 
                 const username = form.username.value;
                 const email = form.email.value;
                 const password = form.password.value;
+                const re_password = form.re_password.value;
 
                 try {
                     const response = await fetch("/register", {
@@ -139,6 +141,7 @@
                             username,
                             email,
                             password,
+                            re_password
                         }),
                     });
 
@@ -149,6 +152,7 @@
                         userError.textContent = data.errors.username
                         emailError.textContent = data.errors.email
                         passwordError.textContent = data.errors.password
+                        repasswordError.textContent = data.errors.password
                     }
                     if(data.user){
                         location.assign('/home')

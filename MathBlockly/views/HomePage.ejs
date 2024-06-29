@@ -64,6 +64,7 @@
                     <a class="nav-link" href="/">Về LeMath</a>
                 </li>
                 <% if(user) { %>
+<<<<<<< HEAD
                     <li class="nav-item px-5">
                         <a class="nav-link" href="/LessonPage">Bài học</a>
                     </li>
@@ -84,6 +85,28 @@
                         <a class="nav-link" href="/home">Thống kê</a>
                     </li>
                     <% } %>
+=======
+                <li class="nav-item px-5">
+                    <a class="nav-link" href="/LessonPage">Bài học</a>
+                </li>
+                <li class="nav-item px-5">
+                    <a class="nav-link" href="/HistoryPage">Lịch sử học</a>
+                </li>
+                <li class="nav-item px-5">
+                    <a class="nav-link" href="/AnalyzePage/<%= userId %>">Thống kê</a>
+                </li>
+                <% } else { %>
+                <li class="nav-item px-5">
+                    <a class="nav-link" href="/home">Bài học</a>
+                </li>
+                <li class="nav-item px-5">
+                    <a class="nav-link" href="/home">Lịch sử học</a>
+                </li>
+                <li class="nav-item px-5">
+                    <a class="nav-link" href="/home">Thống kê</a>
+                </li>
+                <% } %>
+>>>>>>> 0cdefac1fd6db32925214bc49a78efa33bbacb6f
             </ul>
         </nav>
     </header>

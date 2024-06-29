@@ -16,9 +16,9 @@
     <header class="p-3 text-white position-relative">
       <row>
           <div class="d-flex flex-wrap align-items-center justify-content-center mx-auto">
-              <div class="col-3">
-                  <img src="../assets/images/logo.png" alt="Logo LeMath" width="130px" height="40px"
-                      style="float: right;"></img>
+              <div class="col-2">
+                <img src="../assets/images/Logo_LeMath.png" alt="Logo LeMath" width="130px" height="40px"
+                style="float: right;"></img>
               </div>
               <form action="" class="col-6 p-3 px-3">
                   <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm" style="width: 300px;">
@@ -219,7 +219,7 @@
                   <td><%= result.time %></td>
                   <td><%= result.createAt.toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }).split(",")[0] %></td>
                   <td><%= result.score %></td>
-                  <td><a href="/StudyPage/<%= result.lessonID %>" class="text-decoration-none">Làm
+                  <td><a href="/ReviewPage/<%= result.lessonID %>" class="text-decoration-none">Làm
                     lại</a></td>
                 </tr>
               </tbody>
@@ -369,40 +369,6 @@
       window.addEventListener('popstate', function (event) {
         location.reload();
       });
-    </script>
-
-
-    <!-- document.querySelector('.filter-text').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const timeLession = document.getElementById('time-lession').value;
-      const userId = '<%= userId %>';
-      const url = `/AnalyzePage/${userId}?time-lession=${encodeURIComponent(timeLession)}`;
-
-      fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => response.text())  // Assume response is HTML
-      .then(data => {
-        const container = document.createElement('div');
-        container.innerHTML = data;
-        const statisticsContainer = container.querySelector('.statistics-container');
-        document.getElementById('statistics-row').innerHTML = statisticsContainer.outerHTML;
-
-        const container2 = document.createElement('div');
-        container2.innerHTML = data;
-        const summaryTableContainer = container2.querySelector('.bdr');
-        document.getElementById('lesson-summary-table').innerHTML = summaryTableContainer.outerHTML;
-        history.pushState(null, '', url);
-      })
-      .catch(error => console.error('Error:', error));
-    });
-
-    window.addEventListener('popstate', function(event) {
-      location.reload();
-    }); -->
-
+    </script>  
   </body>
 </html>

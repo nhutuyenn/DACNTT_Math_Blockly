@@ -2,15 +2,20 @@ require('dotenv').config()
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcryptjs');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
+const { handleError } = require('./controllers/authController');
 const { checkUser, authenticateToken } = require('./middlewares/authMiddlewares');
 const {
     calculateTotalDuration,
     totalCorrect,
     getTotalLessonsByType,
     calculateAccuracy,
-    calculateAverageLessonTime ,
+    calculateAverageLessonTime,
     calculateAverageScore,
     calculateHighestScore,
 } = require('./controllers/analyzeController');
@@ -37,6 +42,7 @@ let error = "";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use(bodyParser.json());
+app.use(session({ secret: 'yourSecret', resave: false, saveUninitialized: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/assets', express.static('assets'));
@@ -55,6 +61,7 @@ app.get('/', async (req, res) => {
     if (!token) {
         // Redirect to login page if no token is provided
         return res.redirect('/home');
+<<<<<<< HEAD
     }
     try {
         const userId = jwt.verify(token, 'secret').id;
@@ -64,6 +71,95 @@ app.get('/', async (req, res) => {
         return res.redirect('/home');
     }
 })
+=======
+    }
+    try {
+        const userId = jwt.verify(token, 'secret').id;
+        res.render('HomePage', { userId });
+    } catch (error) {
+        // Redirect to login page if token is invalid
+        return res.redirect('/home');
+    }
+})
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'aceofg5@gmail.com',
+        pass: 'tkil errv eavs tbsa',
+    },
+});
+
+// Routes
+app.get('/forgot', (req, res) => {
+    res.render('ForgotPassword', { error: null });
+});
+
+app.post('/forgot', async (req, res) => {
+    const email = req.body.email;
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+        return res.render('ForgotPassword', { error: 'Email không tồn tại' });
+    }
+
+    const otp = crypto.randomBytes(3).toString('hex');
+    const otpExpires = Date.now() + 3600000; // 1 hour
+
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save();
+
+    const mailOptions = {
+        to: email,
+        from: 'aceofg5@gmail.com',
+        subject: 'Password Reset OTP',
+        text: `Your OTP for password reset is ${otp}`,
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            return res.status(500).send('Error sending email');
+        }
+        res.redirect(`/verify/${email}`);
+    });
+});
+
+app.get('/verify/:email', (req, res) => {
+    res.render('VerifyOTP', { email: req.params.email, error: null });
+});
+
+app.post('/verify/:email', async (req, res) => {
+    const { otp } = req.body;
+    const user = await UserModel.findOne({ email: req.params.email });
+
+    if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
+        return res.render('VerifyOTP', {email: req.params.email, error: 'OTP không đúng hoặc đã hết hạn' });
+    }
+
+    res.render('ResetPassword', { email: req.params.email, error: null });
+});
+
+app.get('/reset/:email', (req, res) => {
+    res.render('ResetPassword', { email: req.params.email, error: null });
+});
+
+app.post('/reset/:email', async (req, res) => {
+    const { password } = req.body;
+    const user = await UserModel.findOne({ email: req.params.email });
+    
+    try {
+        user.password = password; // Đặt lại mật khẩu mới (được mã hóa bởi middleware 'pre')
+        user.otp = undefined;
+        user.otpExpires = undefined;
+        await user.save();
+    
+        res.redirect('/login');
+    } catch (error) {
+        res.render('ResetPassword', { email: req.params.email, error: 'Mật khẩu phải có tối thiểu 6 kí tự' });
+    }
+});
+>>>>>>> 0cdefac1fd6db32925214bc49a78efa33bbacb6f
 
 app.get('/StudyPage/:id', async (req, res) => {
     const id = req.params.id;
@@ -164,7 +260,7 @@ app.post('/HistoryPage/:id', async (req, res) => {
         results = await ResultModel.find({ accountID: id, lessonName: findLesson });
     else
         results = await ResultModel.find({ accountID: id });
-    res.render('HistoryPage', { results, user});
+    res.render('HistoryPage', { results, user });
 })
 
 app.get('/LessonPage', async (req, res) => {
@@ -188,6 +284,34 @@ app.get('/LessonPage', async (req, res) => {
 app.post('/LessonPage', async (req, res) => {
     const { lessonInput } = req.body;
     res.redirect('/StudyPage/' + lessonInput);
+})
+
+app.get('/ReviewPage/:id', async (req, res) => {
+    const id = req.params.id;
+    const lessons = await LessonModel.find({ _id: id });
+    const questions = await QuestionModel.find({ lessonID: id });
+    const answers = await AnswerModel.find({ lessonID: id });
+    const results = await ResultModel.find({ lessonID: id });
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.status(401).send({ error: 'No token provided' });
+    }
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        userId = decoded.id;
+    } catch (err) {
+        return res.status(401).send({ error: 'Invalid token' });
+    }
+    console.log(results);
+    res.render('ReviewPage', { results, userId, lessons, questions, answers });
+})
+
+app.post('/ReviewPage/:id', async (req, res) => {
+    const { lessonInput } = req.body;
+    res.redirect('/ReviewPage');
 })
 
 
@@ -235,7 +359,10 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
             break;
     }
 
-    const results = await ResultModel.find({ accountID: userId , createAt: { $gte: startDate, $lt: endDate }});
+    const results = await ResultModel.find({
+        accountID: userId,
+        createAt: { $gte: startDate, $lt: endDate }
+    });
     const totalDuration = await calculateTotalDuration(results);
     const correct = await totalCorrect(results);
     const lessons = await LessonModel.find({ type: typeofLesson });
@@ -246,17 +373,47 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
         createAt: { $gte: startDate, $lt: endDate }
     });
 
-    const totalLessonsLearned =await getTotalLessonsByType(userId, typeofLesson, { startDate, endDate } );
+    const totalLessonsLearned = await getTotalLessonsByType(userId, typeofLesson, { startDate, endDate });
     const accuracy = await calculateAccuracy(userId, typeofLesson, { startDate, endDate });
     const avgTime = await calculateAverageLessonTime(userId, typeofLesson, { startDate, endDate });
     const avgScore = await calculateAverageScore(userId, typeofLesson, { startDate, endDate });
     const highestScore = await calculateHighestScore(userId, typeofLesson, { startDate, endDate });
 
     if (req.xhr) { // If the request is an AJAX request
-        const partialHtml = await renderPartial('./views/templates/statistics-row.ejs', './views/templates/statistics-table.ejs', './views/templates/render-content-analyze.ejs', { results, lessons, totalDuration, resultSorted, correct, userId, totalLessonsLearned, typeofLesson, accuracy, avgTime, avgScore, highestScore });
+        const partialHtml = await renderPartial(
+            './views/templates/statistics-row.ejs',
+            './views/templates/statistics-table.ejs',
+            './views/templates/render-content-analyze.ejs',
+            {
+                results,
+                lessons,
+                totalDuration,
+                resultSorted,
+                correct,
+                userId,
+                totalLessonsLearned,
+                typeofLesson,
+                accuracy,
+                avgTime,
+                avgScore,
+                highestScore
+            });
         res.json({ html: partialHtml });
     } else {
-        res.render('AnalyzePage', { results, lessons, totalDuration, resultSorted, correct, userId, totalLessonsLearned, typeofLesson, accuracy, avgTime, avgScore, highestScore });
+        res.render('AnalyzePage', {
+            results,
+            lessons,
+            totalDuration,
+            resultSorted,
+            correct,
+            userId,
+            totalLessonsLearned,
+            typeofLesson,
+            accuracy,
+            avgTime,
+            avgScore,
+            highestScore
+        });
     }
 });
 
@@ -323,7 +480,7 @@ app.get('/Classroom', async (req, res) => {
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
-    res.render('Classroom', {classrooms, user});
+    res.render('Classroom', { classrooms, user });
 })
 
 app.post('/Classroom', async (req, res) => {
@@ -352,12 +509,12 @@ app.post('/Classroom', async (req, res) => {
 })
 
 app.post('/deleteClass', async (req, res) => {
-    try{
+    try {
         const id = req.body.id;
         await ClassroomModel.deleteOne({ _id: id });
         res.status(200).json({ message: 'Classroom deleted successfully' });
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Internal server error' });
 
@@ -365,7 +522,7 @@ app.post('/deleteClass', async (req, res) => {
 })
 
 app.post('/addStudent', async (req, res) => {
-    try{
+    try {
         const { classroomId, studentId } = req.body;
         const student = await UserModel.find({ _id: studentId });
         if (student.length > 0) {
@@ -379,13 +536,13 @@ app.post('/addStudent', async (req, res) => {
         }
         res.status(200).json({ message: 'Classroom deleted successfully' });
     }
-    catch(error){
+    catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
 })
 
 app.post('/deleteStudent', async (req, res) => {
-    try{
+    try {
         const { classroomId, studentId } = req.body;
         await UserModel.updateOne({ _id: studentId }, {
             $pull: {
@@ -394,7 +551,7 @@ app.post('/deleteStudent', async (req, res) => {
         })
         res.status(200).json({ message: 'Classroom deleted successfully' });
     }
-    catch(error){
+    catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
 })
@@ -414,15 +571,23 @@ app.get('/ClassroomDetail/:id', async (req, res) => {
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
-    if(user[0].role === "teacher"){
-        res.render('ClassroomDetail', {users, id, classroom, teacher});
+    if (user[0].role === "teacher") {
+        res.render('ClassroomDetail', { users, id, classroom, teacher });
     }
     else {
         return res.redirect('/');
     }
 })
 
+<<<<<<< HEAD
 app.listen(process.env.PORT || 5000, () => {
+=======
+app.get('/forgot', (req, res) => {
+    res.render('ForgotPassword');
+});
+
+app.listen(port, () => {
+>>>>>>> 0cdefac1fd6db32925214bc49a78efa33bbacb6f
     mongoose
         .connect(MONGO_URL)
         .then(() => console.log("Connect to mongoDB successfully"))

@@ -2,35 +2,6 @@ const mongoose = require('mongoose');
 const ResultModel = require('../models/result');
 const LessonModel = require('../models/lessons');
 
-
-const timeRange = '7d';
-
-    // Parse time range
-    const endDate = new Date();
-    let startDate;
-    switch (timeRange) {
-        case '1d':
-            startDate = new Date();
-            startDate.setDate(endDate.getDate() - 1);
-            break;
-        case '7d':
-            startDate = new Date();
-            startDate.setDate(endDate.getDate() - 7);
-            break;
-        case '11d':
-            startDate = new Date();
-            startDate.setDate(endDate.getDate() - 14);
-            break;
-        case '30d':
-            startDate = new Date();
-            startDate.setMonth(endDate.getMonth() - 1);
-            break;
-        default:
-            startDate = new Date();
-            startDate.setMonth(endDate.getMonth() - 1);
-            break;
-    }
-
 async function calculateTotalDuration(results) {
   try {
     // const results = await ResultModel.find({ accountID: userId });
@@ -88,7 +59,11 @@ async function calculateAccuracy(userId, type, { startDate, endDate }) {
     try {
         const lessons = await LessonModel.find({ type: type });
         const lessonIds = lessons.map(lesson => lesson._id);
-        const results = await ResultModel.find({ accountID: userId, lessonID: { $in: lessonIds }, createAt: { $gte: startDate, $lt: endDate } });
+        const results = await ResultModel.find({ 
+          accountID: userId, 
+          lessonID: { $in: lessonIds }, 
+          createAt: { $gte: startDate, $lt: endDate } 
+        });
         let sumPoint = 0;
         for (let i = 0; i < results.length; i++) {
             sumPoint += results[i].score;
@@ -108,7 +83,11 @@ async function calculateAverageLessonTime(userId, type, { startDate, endDate }) 
     try { 
         const lessons = await LessonModel.find({ type: type });
         const lessonIds = lessons.map(lesson => lesson._id);
-        const results = await ResultModel.find({ accountID: userId, lessonID: { $in: lessonIds }, createAt: { $gte: startDate, $lt: endDate } });
+        const results = await ResultModel.find({ 
+          accountID: userId, 
+          lessonID: { $in: lessonIds }, 
+          createAt: { $gte: startDate, $lt: endDate } 
+        });
         const totalDuration = results.reduce((acc, result) => {
             const [hours, minutes, seconds] = result.time.split(':').map(Number);
             const timeInSeconds = (hours * 3600) + (minutes * 60) + seconds;
@@ -142,7 +121,11 @@ async function calculateAverageScore(userId, type, { startDate, endDate }) {
   try {
     const lessons = await LessonModel.find({ type: type });
         const lessonIds = lessons.map(lesson => lesson._id);
-        const results = await ResultModel.find({ accountID: userId, lessonID: { $in: lessonIds }, createAt: { $gte: startDate, $lt: endDate } });
+        const results = await ResultModel.find({ 
+          accountID: userId, 
+          lessonID: { $in: lessonIds }, 
+          createAt: { $gte: startDate, $lt: endDate } 
+        });
     const totalScore = results.reduce((acc, result) => {
       return acc + result.score;
     }, 0);
@@ -162,7 +145,11 @@ async function calculateHighestScore(userId, type, { startDate, endDate }) {
   try {
     const lessons = await LessonModel.find({ type: type });
     const lessonIds = lessons.map(lesson => lesson._id);
-    const results = await ResultModel.find({ accountID: userId, lessonID: { $in: lessonIds }, createAt: { $gte: startDate, $lt: endDate } });
+    const results = await ResultModel.find({ 
+      accountID: userId, 
+      lessonID: { $in: lessonIds }, 
+      createAt: { $gte: startDate, $lt: endDate } 
+    });
     const highestScore = results.reduce((maxScore, result) => {
       return Math.max(maxScore, result.score);
     }, 0);
