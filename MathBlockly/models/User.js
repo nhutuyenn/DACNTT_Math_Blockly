@@ -24,22 +24,10 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Mật khẩu phải có tối thiểu 6 kí tự']
   },
   re_password: {
-    type: String,
-    required: [true, 'Re-Password is required'],
-    validate: {
-      validator: function(value) {
-        return value === this.password;
-      },
-      message: 'Mật khẩu nhập lại không trùng khớp'
-    }
+    type: String
   },
   name: {
-<<<<<<< HEAD
     type: String
-=======
-    type: String,
-    // required: [true, 'Username is required'],
->>>>>>> 0cdefac1fd6db32925214bc49a78efa33bbacb6f
   },
 
   phone: {
@@ -66,7 +54,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'student'
   },
-  
+
   otp: {
     type: String
   },

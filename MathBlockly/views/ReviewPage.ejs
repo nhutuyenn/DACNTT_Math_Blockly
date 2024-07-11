@@ -13,7 +13,7 @@
     <title>Review Page</title>
 </head>
 
-<body style="background-color: #FAFAFA;">  
+<body style="background-color: #FAFAFA;">
     <header class="p-3 text-white position-relative">
         <row>
             <div class="d-flex flex-wrap align-items-center justify-content-center mx-auto">
@@ -21,8 +21,9 @@
                     <img src="../assets/images/Logo_LeMath.png" alt="Logo LeMath" width="130px" height="40px"
                         style="float: right;"></img>
                 </div>
-                <form action="" class="col-6 p-3 px-3">
-                    <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm" style="width: 300px;">
+                <form action="/Search" method="post" class="col-6 p-3 px-3">
+                    <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm"
+                        style="width: 300px;" name="search" class="search">
                 </form>
                 <% if(user) { %>
                   <div class="ms-6 col-2">
@@ -55,7 +56,7 @@
                       <% } %>
             </div>
         </row>
-  
+
         <nav class="navbar navbar-expand-sm justify-content-center">
             <ul class="navbar-nav">
                 <li class="nav-item px-5">

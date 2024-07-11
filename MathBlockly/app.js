@@ -34,7 +34,7 @@ const AccountModel = require('./models/accountDetail');
 const response = require('./models/response');
 
 const bodyParser = require('body-parser');
-//const port = process.env.port
+const PORT = process.env.port
 const app = express();
 
 let error = "";
@@ -98,13 +98,14 @@ app.post('/forgot', async (req, res) => {
     user.otp = otp;
     user.otpExpires = otpExpires;
     await user.save();
-
+    console.log("-------------------- line 102 ---------------------");
     const mailOptions = {
         to: email,
         from: 'aceofg5@gmail.com',
         subject: 'Password Reset OTP',
         text: `Your OTP for password reset is ${otp}`,
     };
+    console.log("-------------------- line 109 ---------------------");
 
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
@@ -249,6 +250,27 @@ app.post('/HistoryPage/:id', async (req, res) => {
     else
         results = await ResultModel.find({ accountID: id });
     res.render('HistoryPage', { results, user });
+})
+
+app.post('/Search', async (req, res) => {
+    const search = req.body.search;
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.redirect('/home');
+    }
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        userId = decoded.id;
+    } catch (err) {
+        return res.redirect('/home');
+    }
+    const lessons = await LessonModel.find({ name: search });
+    const user = await UserModel.find({ _id: userId });
+
+    res.render('LessonPage', { lessons,userId, user });
 })
 
 app.get('/LessonPage', async (req, res) => {
@@ -571,7 +593,7 @@ app.get('/forgot', (req, res) => {
     res.render('ForgotPassword');
 });
 
-app.listen(port, () => {
+app.listen(PORT, () => {
     mongoose
         .connect(MONGO_URL)
         .then(() => console.log("Connect to mongoDB successfully"))
