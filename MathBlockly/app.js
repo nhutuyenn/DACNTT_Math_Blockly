@@ -34,7 +34,7 @@ const AccountModel = require('./models/accountDetail');
 const response = require('./models/response');
 
 const bodyParser = require('body-parser');
-const PORT = process.env.port
+//const PORT = process.env.PORT
 const app = express();
 
 let error = "";
@@ -46,6 +46,7 @@ app.use(session({ secret: 'yourSecret', resave: false, saveUninitialized: true }
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/assets', express.static('assets'));
+app.use(express.static(__dirname + '/assets'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(authRoutes);
@@ -98,14 +99,12 @@ app.post('/forgot', async (req, res) => {
     user.otp = otp;
     user.otpExpires = otpExpires;
     await user.save();
-    console.log("-------------------- line 102 ---------------------");
     const mailOptions = {
         to: email,
         from: 'aceofg5@gmail.com',
         subject: 'Password Reset OTP',
         text: `Your OTP for password reset is ${otp}`,
     };
-    console.log("-------------------- line 109 ---------------------");
 
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
@@ -226,13 +225,23 @@ app.get('/HistoryPage', async (req, res) => {
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
-    res.redirect('/HistoryPage/' + userID);
+    res.redirect('/HistoryPage/' + userID + '/1');
 })
 
-app.get('/HistoryPage/:id', async (req, res) => {
+app.get('/HistoryPage/:id/:page?', async (req, res) => {
     const id = req.params.id;
-    const results = await ResultModel.find({ accountID: id });
-    res.render('HistoryPage', { results });
+    const page = parseInt(req.params.page) || 1;
+    const pageSize = 10;
+    const skip = (page - 1) * pageSize;
+
+    const results = await ResultModel.find({ accountID: id })
+                                    .skip(skip)
+                                    .limit(pageSize)
+                                    .exec();
+
+    const totalResults = await ResultModel.countDocuments({ accountID: id }).exec();
+    const totalPages = Math.ceil(totalResults / pageSize);
+    res.render('HistoryPage', { results, page, totalPages, id });
 })
 
 app.post('/HistoryPage/:id', async (req, res) => {
@@ -593,7 +602,7 @@ app.get('/forgot', (req, res) => {
     res.render('ForgotPassword');
 });
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || 5000, () => {
     mongoose
         .connect(MONGO_URL)
         .then(() => console.log("Connect to mongoDB successfully"))

@@ -201,6 +201,15 @@
       </section>
 
       <section id="lesson-summary-table" class="pt-5 mt-5 container ">
+        <% if (resultSorted.length === 0) {
+          %>
+          <div class="d-flex flex-column justify-content-center align-items-center w-100" style="min-height: 260px;">
+              <div class="justify-content-center align-items-center w-100" style="color: #666666;">
+                  <h3 class="text-center">Hiện tại bạn chưa hoàn thành bất kỳ bài học nào.</h3>
+                  <h3 class="text-center">Nhấn <a href="/LessonPage">vào đây</a> để bắt đầu bài học mới!</h3>
+              </div>
+          </div>
+      <% } else {%>
         <div class="bdr">
           <table class="table table-hover table-borderless mx-auto d-table">
             <thead class>
@@ -241,6 +250,7 @@
         <div class="view-all-table">
           <a href="#">>> Xem tất cả</a>
         </div>
+        <% } %>
       </section>
     </section>
   </div>

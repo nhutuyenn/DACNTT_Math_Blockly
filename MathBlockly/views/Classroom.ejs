@@ -86,6 +86,15 @@
                     </div>
                     <% } %>
             </div>
+            <% if (classrooms.length==0) { %>
+                <div class="d-flex flex-column justify-content-center align-items-center w-100" style="min-height: 260px;">
+                    <div class="justify-content-center align-items-center w-100" style="color: #666666;">
+                        <h3 class="text-center">Hiện tại bạn chưa được tham gia vào lớp học nào.</h3>
+                        <h3 class="text-center">Hãy liên hệ giáo viên để được truy cập tính năng này!</h3>
+                    </div>
+                </div>
+        </div>
+        <% } %>
             <div class="row">
                 <% classrooms.forEach(classroom=> { %>
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3  mt-5">
@@ -103,8 +112,8 @@
                                     </h6>
                                 </div>
                             </div>
-                                <div class="px-3 py-2" style="min-height: 50px;">
-                                    <% if(user[0].role==='teacher' ) { %>
+                            <div class="px-3 py-2" style="min-height: 50px;">
+                                <% if(user[0].role==='teacher' ) { %>
                                     <div class="d-flex justify-content-between">
                                         <a href="/ClassroomDetail/<%= classroom._id %>"><i style="font-size: 28px;"
                                                 class="bi bi-box-arrow-in-right join-button"></i></a>
@@ -114,12 +123,12 @@
                                     </div>
                                     <% } %>
 
-                                </div>
+                            </div>
                         </div>
                     </div>
                     <% }); %>
             </div>
-        </div>
+    </div>
     </div>
 
     <div class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
