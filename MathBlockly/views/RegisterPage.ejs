@@ -146,14 +146,14 @@
                     });
 
                     const data = await response.json({});
-                    console.log(data);
 
                     if(data.errors){
                         userError.textContent = data.errors.username
                         emailError.textContent = data.errors.email
                         passwordError.textContent = data.errors.password
-                        repasswordError.textContent = data.errors.password
+                        repasswordError.textContent = data.errors.re_password
                     }
+                    console.log(repasswordError.textContent)
                     if(data.user){
                         location.assign('/home')
                     }

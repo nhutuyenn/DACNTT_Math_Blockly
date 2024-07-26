@@ -26,6 +26,7 @@ const resultSchema = new mongoose.Schema({
 
   createAt: {
     type: Date,
+    default: Date.now
   }
 });
 

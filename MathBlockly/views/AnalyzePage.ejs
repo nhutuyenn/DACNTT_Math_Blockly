@@ -93,6 +93,7 @@
               <option value="7d">7 ngày gần nhất</option>
               <option value="14d" selected>14 ngày gần nhất</option>
               <option value="30d">30 ngày gần nhất</option>
+              <option value="90d">90 ngày gần nhất</option>
             </select>
             <button type="submit" class="search-button-lesson border-0 p-2 ms-3 effect-button">
               <span class="fs-6 text-light">Tìm kiếm</span>
@@ -138,13 +139,17 @@
   </section>
     <section class="widget-wrapper container">
       <div class="skeleton-component d-flex flex-row py-5">
-          <div class="mx-5 numerals" >
-            <h5 class="skeleton-component activeNumOrGeo">Số học</h5>
-            <div class="skeleton-bar active-skeleton-bar"></div>
-          </div>
+        <div class="mx-5 numerals" >
+          <h5 class="skeleton-component activeNumOrGeo">Số học</h5>
+          <div class="skeleton-bar active-skeleton-bar"></div>
+        </div>
         <!-- SUY NGHI THEM VE ACTIVE -->
         <div class="mx-5 geometry">
           <h5 class="skeleton-component">Hình học</h5>
+          <div class="skeleton-bar"></div>
+        </div>
+        <div class="mx-5 all">
+          <h5 class="skeleton-component">Tất cả</h5>
           <div class="skeleton-bar"></div>
         </div>
       </div>
@@ -219,7 +224,7 @@
                   <td><%= result.time %></td>
                   <td><%= result.createAt.toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }).split(",")[0] %></td>
                   <td><%= result.score %></td>
-                  <td><a href="/ReviewPage/<%= result.lessonID %>" class="text-decoration-none">Làm
+                  <td><a href="/ReviewPage/<%= result.id %>" class="text-decoration-none">Làm
                     lại</a></td>
                 </tr>
               </tbody>
@@ -254,26 +259,43 @@
 
       const numerals = document.querySelector('.numerals');
       const geometry = document.querySelector('.geometry');
+      const all = document.querySelector('.all');
       const titleNumerals = document.querySelector('.numerals > h5');
       const skeletonNumerals = document.querySelector('.numerals > div');
       const titleGeometry = document.querySelector('.geometry > h5');
       const skeletonGeometry = document.querySelector('.geometry > div');
+      const titleAll = document.querySelector('.all > h5');
+      const skeletonAll = document.querySelector('.all > div');
       const filterLessonByTimeBtn = document.querySelector('.search-button-lesson');
 
       numerals.addEventListener('click', function () {
         titleNumerals.classList.add('activeNumOrGeo');
         titleGeometry.classList.remove('activeNumOrGeo');
+        titleAll.classList.remove('activeNumOrGeo');
         skeletonNumerals.classList.add('active-skeleton-bar');
         skeletonGeometry.classList.remove('active-skeleton-bar');
+        skeletonAll.classList.remove('active-skeleton-bar');
         changeLessonType('Số học')();
       });
 
       geometry.addEventListener('click', function () {
         titleNumerals.classList.remove('activeNumOrGeo');
         titleGeometry.classList.add('activeNumOrGeo');
+        titleAll.classList.remove('activeNumOrGeo');
         skeletonNumerals.classList.remove('active-skeleton-bar');
         skeletonGeometry.classList.add('active-skeleton-bar');
+        skeletonAll.classList.remove('active-skeleton-bar');
         changeLessonType('Hình học')();
+      });
+
+      all.addEventListener('click', function () {
+        titleAll.classList.add('activeNumOrGeo');
+        titleNumerals.classList.remove('activeNumOrGeo');
+        titleGeometry.classList.remove('activeNumOrGeo');
+        skeletonAll.classList.add('active-skeleton-bar');
+        skeletonNumerals.classList.remove('active-skeleton-bar');
+        skeletonGeometry.classList.remove('active-skeleton-bar');
+        changeLessonType('all')();
       });
 
       function changeLessonType(type) {
@@ -307,13 +329,24 @@
             if (type === 'Số học') {
               titleNumerals.classList.add('activeNumOrGeo');
               titleGeometry.classList.remove('activeNumOrGeo');
+              titleAll.classList.remove('activeNumOrGeo');
               skeletonNumerals.classList.add('active-skeleton-bar');
               skeletonGeometry.classList.remove('active-skeleton-bar');
+              skeletonAll.classList.remove('active-skeleton-bar');
             } else if (type === 'Hình học') {
               titleNumerals.classList.remove('activeNumOrGeo');
               titleGeometry.classList.add('activeNumOrGeo');
+              titleAll.classList.remove('activeNumOrGeo');
               skeletonNumerals.classList.remove('active-skeleton-bar');
               skeletonGeometry.classList.add('active-skeleton-bar');
+              skeletonAll.classList.remove('active-skeleton-bar');
+            } else if (type === 'all') {
+              titleAll.classList.add('activeNumOrGeo');
+              titleNumerals.classList.remove('activeNumOrGeo');
+              titleGeometry.classList.remove('activeNumOrGeo');
+              skeletonAll.classList.add('active-skeleton-bar');
+              skeletonNumerals.classList.remove('active-skeleton-bar');
+              skeletonGeometry.classList.remove('active-skeleton-bar');
             }
           })
           .catch(error => console.error('Error:', error));
@@ -354,13 +387,24 @@
           if (type === 'Số học') {
             titleNumerals.classList.add('activeNumOrGeo');
             titleGeometry.classList.remove('activeNumOrGeo');
+            titleAll.classList.remove('activeNumOrGeo');
             skeletonNumerals.classList.add('active-skeleton-bar');
             skeletonGeometry.classList.remove('active-skeleton-bar');
+            skeletonAll.classList.remove('active-skeleton-bar');
           } else if (type === 'Hình học') {
             titleNumerals.classList.remove('activeNumOrGeo');
             titleGeometry.classList.add('activeNumOrGeo');
+            titleAll.classList.remove('activeNumOrGeo');
             skeletonNumerals.classList.remove('active-skeleton-bar');
             skeletonGeometry.classList.add('active-skeleton-bar');
+            skeletonAll.classList.remove('active-skeleton-bar');
+          } else if (type === 'all') {
+            titleAll.classList.add('activeNumOrGeo');
+            titleNumerals.classList.remove('activeNumOrGeo');
+            titleGeometry.classList.remove('activeNumOrGeo');
+            skeletonAll.classList.add('active-skeleton-bar');
+            skeletonNumerals.classList.remove('active-skeleton-bar');
+            skeletonGeometry.classList.remove('active-skeleton-bar');
           }
         })
         .catch(error => console.error('Error:', error));

@@ -30,6 +30,7 @@ const ResultModel = require('./models/result');
 const ValidationModel = require('./models/validation');
 const ClassroomModel = require('./models/classroom')
 const UserModel = require('./models/User');
+const SaveResultsModel = require('./models/saveResults');
 const AccountModel = require('./models/accountDetail');
 const response = require('./models/response');
 
@@ -84,34 +85,34 @@ app.get('/forgot', (req, res) => {
     res.render('ForgotPassword', { error: null });
 });
 
-app.post('/forgot', async (req, res) => {
-    const email = req.body.email;
-    const user = await UserModel.findOne({ email });
+app.post('/forgot', async (req, res, next) => {
+    try {
+        const email = req.body.email;
+        const user = await UserModel.findOne({ email });
 
-    if (!user) {
-        return res.render('ForgotPassword', { error: 'Email không tồn tại' });
-    }
-
-    const otp = crypto.randomBytes(3).toString('hex');
-    const otpExpires = Date.now() + 3600000; // 1 hour
-
-    user.otp = otp;
-    user.otpExpires = otpExpires;
-    await user.save();
-
-    const mailOptions = {
-        to: email,
-        from: 'aceofg5@gmail.com',
-        subject: 'Password Reset OTP',
-        text: `Your OTP for password reset is ${otp}`,
-    };
-
-    transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            return res.status(500).send('Error sending email');
+        if (!user) {
+            throw new Error('Email không tồn tại');
         }
+
+        const otp = crypto.randomBytes(3).toString('hex');
+        const otpExpires = Date.now() + 3600000; // 1 hour
+
+        user.otp = otp;
+        user.otpExpires = otpExpires;
+        await user.save({ validateModifiedOnly: true });
+
+        const mailOptions = {
+            to: email,
+            from: 'aceofg5@gmail.com',
+            subject: 'Password Reset OTP',
+            text: `Your OTP for password reset is ${otp}`,
+        };
+
+        await transporter.sendMail(mailOptions);
         res.redirect(`/verify/${email}`);
-    });
+    } catch (error) {
+        next(error);
+    }
 });
 
 app.get('/verify/:email', (req, res) => {
@@ -141,7 +142,7 @@ app.post('/reset/:email', async (req, res) => {
         user.password = password; // Đặt lại mật khẩu mới (được mã hóa bởi middleware 'pre')
         user.otp = undefined;
         user.otpExpires = undefined;
-        await user.save();
+        await user.save({ validateModifiedOnly: true });
     
         res.redirect('/login');
     } catch (error) {
@@ -168,13 +169,12 @@ app.get('/StudyPage/:id', async (req, res) => {
 app.post('/StudyPage/:id', async (req, res) => {
     const id = req.params.id;
     const countdownValue = req.body.countdownValue;
+    const questions = await QuestionModel.find({ lessonID: id });
     const lessons = await LessonModel.find({ _id: id });
     let score = 0;
-
+    const objects = JSON.parse(req.body.answerinput);
+    const validations = await ValidationModel.find();
     try {
-        const validations = await ValidationModel.find();
-        const objects = JSON.parse(req.body.answerinput);
-
         validations.forEach((validation) => {
             // Compare questionID
             if (objects.hasOwnProperty(validation.questionID.toString())) {
@@ -215,6 +215,19 @@ app.post('/StudyPage/:id', async (req, res) => {
         createAt: date
     });
     await result.save();
+    // Lưu từng câu hỏi vào SaveResultsModel
+    const saveResultsPromises = questions.map(question => {
+        
+        const saveResult = new SaveResultsModel({
+            resultID: result._id,
+            questionID: question._id,
+            question: question.direction,
+            answerID: objects[question._id] 
+        });
+        return saveResult.save();    
+    });
+    
+    await Promise.all(saveResultsPromises);
     res.redirect('/HistoryPage');
 })
 
@@ -276,10 +289,12 @@ app.post('/LessonPage', async (req, res) => {
 
 app.get('/ReviewPage/:id', async (req, res) => {
     const id = req.params.id;
-    const lessons = await LessonModel.find({ _id: id });
-    const questions = await QuestionModel.find({ lessonID: id });
-    const answers = await AnswerModel.find({ lessonID: id });
-    const results = await ResultModel.find({ lessonID: id });
+    const validations = await ValidationModel.find();
+    const results_saved = await SaveResultsModel.find({ resultID: id });
+    const results = await ResultModel.find({ _id: id });
+    const lessons = await LessonModel.find();
+    const questions = await QuestionModel.find();
+    const answers = await AnswerModel.find();
     const token = req.cookies.jwt;
 
     if (!token) {
@@ -293,8 +308,8 @@ app.get('/ReviewPage/:id', async (req, res) => {
     } catch (err) {
         return res.status(401).send({ error: 'Invalid token' });
     }
-    console.log(results);
-    res.render('ReviewPage', { results, userId, lessons, questions, answers });
+
+    res.render('ReviewPage', { results, userId, lessons, questions, answers, results_saved });
 })
 
 app.post('/ReviewPage/:id', async (req, res) => {
@@ -323,12 +338,13 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
 
     // Parse time range
     const endDate = new Date();
+    endDate.setUTCDate(endDate.getUTCDate() + 1);
     let startDate;
     switch (timeRange) {
         case '1d':
             startDate = new Date();
             startDate.setDate(endDate.getDate() - 1);
-            break;
+            break;x``
         case '7d':
             startDate = new Date();
             startDate.setDate(endDate.getDate() - 7);
@@ -340,6 +356,10 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
         case '30d':
             startDate = new Date();
             startDate.setMonth(endDate.getMonth() - 1);
+            break;
+        case '90d':
+            startDate = new Date();
+            startDate.setMonth(endDate.getMonth() - 3);
             break;
         default:
             startDate = new Date();
@@ -353,14 +373,18 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
     });
     const totalDuration = await calculateTotalDuration(results);
     const correct = await totalCorrect(results);
-    const lessons = await LessonModel.find({ type: typeofLesson });
+    let lessons;
+    if (typeofLesson === 'all') {
+        lessons = await LessonModel.find();
+    } else {
+        lessons = await LessonModel.find({ type: typeofLesson });
+    }
     const lessonIds = lessons.map(lesson => lesson._id);
     const resultSorted = await ResultModel.find({
         accountID: userId,
         lessonID: { $in: lessonIds },
         createAt: { $gte: startDate, $lt: endDate }
     });
-
     const totalLessonsLearned = await getTotalLessonsByType(userId, typeofLesson, { startDate, endDate });
     const accuracy = await calculateAccuracy(userId, typeofLesson, { startDate, endDate });
     const avgTime = await calculateAverageLessonTime(userId, typeofLesson, { startDate, endDate });
@@ -557,10 +581,6 @@ app.get('/ClassroomDetail/:id', async (req, res) => {
         return res.redirect('/');
     }
 })
-
-app.get('/forgot', (req, res) => {
-    res.render('ForgotPassword');
-});
 
 app.listen(port, () => {
     mongoose
