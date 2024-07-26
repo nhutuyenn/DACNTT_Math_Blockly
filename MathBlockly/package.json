@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "blockly": "^11.1.1",
@@ -23,12 +22,16 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@types/node": "^20.14.8"
+  },
+  "engines": {
+    "node": "18.4.0",
+    "npm": "8.12.1"
   }
 }

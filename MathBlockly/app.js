@@ -35,7 +35,7 @@ const AccountModel = require('./models/accountDetail');
 const response = require('./models/response');
 
 const bodyParser = require('body-parser');
-const port = process.env.port
+//const PORT = process.env.PORT
 const app = express();
 
 let error = "";
@@ -47,6 +47,7 @@ app.use(session({ secret: 'yourSecret', resave: false, saveUninitialized: true }
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/assets', express.static('assets'));
+app.use(express.static(__dirname + '/assets'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(authRoutes);
@@ -137,7 +138,7 @@ app.get('/reset/:email', (req, res) => {
 app.post('/reset/:email', async (req, res) => {
     const { password } = req.body;
     const user = await UserModel.findOne({ email: req.params.email });
-    
+
     try {
         user.password = password; // Đặt lại mật khẩu mới (được mã hóa bởi middleware 'pre')
         user.otp = undefined;
@@ -238,13 +239,23 @@ app.get('/HistoryPage', async (req, res) => {
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
-    res.redirect('/HistoryPage/' + userID);
+    res.redirect('/HistoryPage/' + userID + '/1');
 })
 
-app.get('/HistoryPage/:id', async (req, res) => {
+app.get('/HistoryPage/:id/:page?', async (req, res) => {
     const id = req.params.id;
-    const results = await ResultModel.find({ accountID: id });
-    res.render('HistoryPage', { results });
+    const page = parseInt(req.params.page) || 1;
+    const pageSize = 10;
+    const skip = (page - 1) * pageSize;
+
+    const results = await ResultModel.find({ accountID: id })
+                                    .skip(skip)
+                                    .limit(pageSize)
+                                    .exec();
+
+    const totalResults = await ResultModel.countDocuments({ accountID: id }).exec();
+    const totalPages = Math.ceil(totalResults / pageSize);
+    res.render('HistoryPage', { results, page, totalPages, id });
 })
 
 app.post('/HistoryPage/:id', async (req, res) => {
@@ -264,12 +275,12 @@ app.post('/HistoryPage/:id', async (req, res) => {
     res.render('HistoryPage', { results, user });
 })
 
-app.get('/LessonPage', async (req, res) => {
-    const lessons = await LessonModel.find();
+app.post('/Search', async (req, res) => {
+    const search = req.body.search;
     const token = req.cookies.jwt;
 
     if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
+        return res.redirect('/home');
     }
 
     let userId;
@@ -277,7 +288,28 @@ app.get('/LessonPage', async (req, res) => {
         const decoded = jwt.verify(token, 'secret');
         userId = decoded.id;
     } catch (err) {
-        return res.status(401).send({ error: 'Invalid token' });
+        return res.redirect('/home');
+    }
+    const lessons = await LessonModel.find({ name: search });
+    const user = await UserModel.find({ _id: userId });
+
+    res.render('LessonPage', { lessons,userId, user });
+})
+
+app.get('/LessonPage', async (req, res) => {
+    const lessons = await LessonModel.find();
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.redirect('/home');
+    }
+
+    let userId;
+    try {
+        const decoded = jwt.verify(token, 'secret');
+        userId = decoded.id;
+    } catch (err) {
+        return res.redirect('/home');
     }
     res.render('LessonPage', { lessons, userId });
 })
@@ -322,7 +354,7 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
     const token = req.cookies.jwt;
 
     if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
+        return res.redirect('/home');
     }
 
     let userId;
@@ -451,6 +483,9 @@ app.get('/home', (req, res) => {
 
 app.get('/UserDetails', async (req, res) => {
     const token = req.cookies.jwt;
+    if (!token) {
+        return res.redirect('/home');
+    }
     const userID = jwt.verify(token, 'secret').id;
     const user = await UserModel.find({ _id: userID });
 
@@ -480,6 +515,9 @@ app.post('/UserDetails', async (req, res) => {
 
 app.get('/Classroom', async (req, res) => {
     const token = req.cookies.jwt;
+    if (!token) {
+        return res.redirect('/home');
+    }
     const userID = jwt.verify(token, 'secret').id;
     const user = await UserModel.find({ _id: userID });
     const classrooms = await ClassroomModel.find({ teacherID: userID });
@@ -564,12 +602,15 @@ app.post('/deleteStudent', async (req, res) => {
 
 app.get('/ClassroomDetail/:id', async (req, res) => {
     const token = req.cookies.jwt;
+    if (!token) {
+        return res.redirect('/home');
+    }
     const userID = jwt.verify(token, 'secret').id;
     const user = await UserModel.find({ _id: userID });
     const id = req.params.id;
     const users = await UserModel.find({ classroomID: id });
     const classroom = await ClassroomModel.findOne({ _id: id });
-    console.log(teacher)
+    const teacher = await UserModel.find({ _id: classroom.teacherID });
 
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
@@ -582,10 +623,14 @@ app.get('/ClassroomDetail/:id', async (req, res) => {
     }
 })
 
-app.listen(port, () => {
+app.get('/forgot', (req, res) => {
+    res.render('ForgotPassword');
+});
+
+app.listen(process.env.PORT || 5000, () => {
     mongoose
         .connect(MONGO_URL)
         .then(() => console.log("Connect to mongoDB successfully"))
         .catch((err) => console.error("Could not connect to MongoDB", err));
-    console.log('http://localhost:' + port)
+    console.log('http://localhost:' + process.env.PORT)
 })

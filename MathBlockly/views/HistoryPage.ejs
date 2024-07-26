@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://kit.fontawesome.com/61a0b1fdce.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../assets/css/HistoryPage.css">
+    <link rel="stylesheet" href="../../assets/css/HistoryPage.css">
     <title>History Page</title>
 </head>
 
@@ -17,12 +17,12 @@
         <row>
             <div class="d-flex justify-content-between align-items-center mx-auto">
                 <div class="col-2">
-                    <img src="../assets/images/Logo_LeMath.png" alt="Logo LeMath" width="130px" height="40px"
+                    <img src="../../assets/images/Logo_LeMath.png" alt="Logo LeMath" width="130px" height="40px"
                         style="float: right;"></img>
                 </div>
-                <form action="" class="col-6 p-3 px-3">
+                <form action="/Search" method="post" class="col-6 p-3 px-3">
                     <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm"
-                        style="width: 300px;">
+                        style="width: 300px;" name="search" class="search">
                 </form>
                 <% if(user) { %>
                     <div class="ms-6 col-2">
@@ -44,14 +44,14 @@
                         </div>
                     </div>
                     <% } else { %>
-                        <class class="col-3 headerBtn text-decoration-none">
+                        <div class="col-3 headerBtn text-decoration-none">
                             <a href="/login">
                                 <button class="logIn">Đăng nhập</button>
                             </a>
                             <a href="/register">
                                 <button class="signUp">Đăng ký</button>
                             </a>
-                        </class>
+                        </div>
                         <% } %>
             </div>
         </row>
@@ -65,10 +65,10 @@
                     <a class="nav-link" href="/LessonPage">Bài học</a>
                 </li>
                 <li class="nav-item px-5">
-                    <a class="nav-link" href="/HistoryPage">Lịch sử học</a>
+                    <a class="nav-link active" href="/HistoryPage">Lịch sử học</a>
                 </li>
                 <li class="nav-item px-5">
-                    <a class="nav-link active" href="/AnalyzePage/${encodeURIComponent('userId')}">Thống kê</a>
+                    <a class="nav-link" href="/AnalyzePage/${encodeURIComponent('userId')}">Thống kê</a>
                 </li>
             </ul>
         </nav>
@@ -104,6 +104,15 @@
             </div>
         </form>
         <section id="lesson-history-table" class="pt-5 mt-2 container">
+            <% if (results.length === 0) {
+                %>
+                <div class="d-flex flex-column justify-content-center align-items-center w-100" style="min-height: 260px;">
+                    <div class="justify-content-center align-items-center w-100" style="color: #666666;">
+                        <h3 class="text-center">Hiện tại bạn chưa hoàn thành bất kỳ bài học nào.</h3>
+                        <h3 class="text-center">Nhấn <a href="/LessonPage">vào đây</a> để bắt đầu bài học mới!</h3>
+                    </div>
+                </div>
+            <% } else {%>
             <div class="bdr">
                 <table class="table table-hover table-borderless mx-auto d-table">
                     <thead>
@@ -145,21 +154,21 @@
             </div>
             <div class="go-and-back-to-history-page d-flex flex-row justify-content-between mt-4">
                 <div class="group-next-to-page-button">
-                    <button class="button-page purple-color border-0 p-2 ms-2 effect-button text-light">1</button>
-                </div>
-                <div>
-                    <form class="d-flex" role="search">
-                        <div class="input-group go-to-history-page border border-secondary-subtle">
-                            <input class="form-control" type="search" placeholder="To page" aria-label="Search">
-                        </div>
-                        <div>
-                            <button type="submit"
-                                class="go-to-history-lesson-page-button border-0 p-2 ms-4 effect-button"><span
-                                    class="fs-6 text-light">Go</span></button>
-                        </div>
-                    </form>
+                    <% if (page > 1) { %>
+                        <a href="/HistoryPage/<%= id %>/<%= page - 1 %>" class="button-page purple-color border-0 p-2 ms-2 effect-button text-light">Previous</a>
+                    <% } %>
+                    <% for (let p = 1; p <= totalPages; p++) { %>
+                        <a href="/HistoryPage/<%= id %>/<%= p %>" style="text-align: center;"> <button class="button-page <%= p === page ? 'purple-color' : 'border-0 text-light' %> p-2 ms-2 effect-button">
+                            <%= p %>
+                            </button>
+                        </a>
+                    <% } %>
+                    <% if (page < totalPages) { %>
+                        <a href="/HistoryPage/<%= id %>/<%= page + 1 %>" class="button-page purple-color border-0 p-2 ms-2 effect-button text-light">Next</a>
+                    <% } %>
                 </div>
             </div>
+            <% } %>
         </section>
     </div>
     <footer class="footer mt-5">

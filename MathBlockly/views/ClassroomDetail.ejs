@@ -23,9 +23,9 @@
                     <img src="../assets/images/Logo_LeMath.png" alt="Logo LeMath" width="130px" height="40px"
                         style="float: right;"></img>
                 </div>
-                <form action="" class="col-6 p-3 px-3">
+                <form action="/Search" method="post" class="col-6 p-3 px-3">
                     <input class="w-100 border rounded-5 p-2 px-4" type="search" placeholder="Tìm kiếm"
-                        style="width: 300px;">
+                        style="width: 300px;" name="search" class="search">
                 </form>
                 <% if(user) { %>
                     <div class="ms-6 col-2">
@@ -81,6 +81,15 @@
             <div class="newCard px-3 py-3 d-flex align-items-start flex-column mb-4" style="color: #FAFAFA;">
                 <h3 class="mt-auto"><%= classroom.name %></h3>
             </div>
+            <% if (users.length === 0) {
+                %>
+                <div class="d-flex flex-column justify-content-center align-items-center w-100" style="min-height: 260px;">
+                    <div class="justify-content-center align-items-center w-100" style="color: #666666;">
+                        <h3 class="text-center">Hiện tại lớp học chưa có thành viên nào.</h3>
+                        <h3 class="text-center">Hãy bắt đầu thêm thành viên mới!</h3>
+                    </div>
+                </div>
+            <% } else {%>
             <table class="table">
                 <thead>
                     <tr>
@@ -118,6 +127,7 @@
                         <% } %>
                 </tbody>
             </table>
+            <% } %>
             <button class="mt-3 addBtn" data-bs-toggle="modal" data-bs-target="#addStudentModel">Thêm học viên</button>
         </div>
     </div>

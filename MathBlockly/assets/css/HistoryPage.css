@@ -225,6 +225,7 @@ footer {
 .button-page {
     width: 38px;
     height: 38px;
+    border-radius: 7px;
 }
 
 .go-and-back-to-history-page {
@@ -401,3 +402,7 @@ footer {
 .active {
     display: block;
 }
+
+a:link {
+    text-decoration: none;
+  }
