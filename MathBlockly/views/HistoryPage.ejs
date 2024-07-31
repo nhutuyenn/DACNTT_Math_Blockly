@@ -158,7 +158,7 @@
                         <a href="/HistoryPage/<%= id %>/<%= page - 1 %>" class="button-page purple-color border-0 p-2 ms-2 effect-button text-light">Previous</a>
                     <% } %>
                     <% for (let p = 1; p <= totalPages; p++) { %>
-                        <a href="/HistoryPage/<%= id %>/<%= p %>" style="text-align: center;"> <button class="button-page <%= p === page ? 'purple-color' : 'border-0 text-light' %> p-2 ms-2 effect-button">
+                        <a href="/HistoryPage/<%= id %>/<%= p %>" style="text-align: center;"> <button class="button-page <%= p === page ? 'purple-color border-0' : 'border-0 text-dark' %> p-2 ms-2 effect-button">
                             <%= p %>
                             </button>
                         </a>

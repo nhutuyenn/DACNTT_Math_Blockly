@@ -417,6 +417,7 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
         lessonID: { $in: lessonIds },
         createAt: { $gte: startDate, $lt: endDate }
     });
+    // const resultSorted = [...resultSorted1].reverse();
     const totalLessonsLearned = await getTotalLessonsByType(userId, typeofLesson, { startDate, endDate });
     const accuracy = await calculateAccuracy(userId, typeofLesson, { startDate, endDate });
     const avgTime = await calculateAverageLessonTime(userId, typeofLesson, { startDate, endDate });
