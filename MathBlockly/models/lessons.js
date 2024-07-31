@@ -10,6 +10,9 @@ const lessonSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+
+  time:{
+    time: String}
 });
 
 const Lesson = mongoose.model('Lesson', lessonSchema);
