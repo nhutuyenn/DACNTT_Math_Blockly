@@ -50,7 +50,7 @@ app.use(express.static(__dirname + '/assets'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(authRoutes);
-//app.use(studyRoutes);
+app.use("/", require('./routes/studyRoutes'));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -148,7 +148,7 @@ app.post('/reset/:email', async (req, res) => {
         res.render('ResetPassword', { email: req.params.email, error: 'Mật khẩu phải có tối thiểu 6 kí tự' });
     }
 });
-
+/*
 app.get('/StudyPage/:id', async (req, res) => {
     const id = req.params.id;
     const lessons = await LessonModel.find({ _id: id });
@@ -229,7 +229,7 @@ app.post('/StudyPage/:id', async (req, res) => {
     await result.save();
     res.redirect('/HistoryPage');
 })
-
+*/
 app.get('/HistoryPage', async (req, res) => {
     const token = req.cookies.jwt;
     const userID = jwt.verify(token, 'secret').id;
