@@ -98,7 +98,7 @@ app.post('/forgot', async (req, res) => {
 
     user.otp = otp;
     user.otpExpires = otpExpires;
-    await user.save();
+    await user.save({ validateModifiedOnly: true });
     const mailOptions = {
         to: email,
         from: 'aceofg5@gmail.com',
@@ -141,7 +141,7 @@ app.post('/reset/:email', async (req, res) => {
         user.password = password; // Đặt lại mật khẩu mới (được mã hóa bởi middleware 'pre')
         user.otp = undefined;
         user.otpExpires = undefined;
-        await user.save();
+        await user.save({ validateModifiedOnly: true });
 
         res.redirect('/login');
     } catch (error) {
@@ -412,7 +412,7 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
         lessonID: { $in: lessonIds },
         createAt: { $gte: startDate, $lt: endDate }
     });
-
+    // const resultSorted = [...resultSorted1].reverse();
     const totalLessonsLearned = await getTotalLessonsByType(userId, typeofLesson, { startDate, endDate });
     const accuracy = await calculateAccuracy(userId, typeofLesson, { startDate, endDate });
     const avgTime = await calculateAverageLessonTime(userId, typeofLesson, { startDate, endDate });
