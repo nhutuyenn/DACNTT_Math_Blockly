@@ -38,6 +38,10 @@ footer {
     color: white;
 }
 
+.btn-stt {
+    color: #000
+}
+
 .logIn{
     background-color: #EF5DA8;
     border: none;
