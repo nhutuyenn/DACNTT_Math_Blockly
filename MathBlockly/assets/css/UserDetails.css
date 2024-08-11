@@ -198,7 +198,7 @@ footer {
 
 .user-details-container{
     z-index: 100;
-    right: 165px;
+    right: 50px;
     top: 80px;
     display: none;
 }

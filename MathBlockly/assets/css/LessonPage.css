@@ -27,7 +27,7 @@
 
 .user-details-container{
     z-index: 100;
-    right: 155px;
+    right: 50px;
     bottom: -25px;
     display: none;
 }
@@ -62,4 +62,18 @@
     border-radius: 20px;
     width: 100px;
     padding: 5px 0px;
+}
+
+.cardLesson{
+    border: 1px solid black;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden; /* Ensures any overflow from the image is hidden */
+    width: 100%; /* Make sure the container takes up the full width of the column */
+}
+
+.cardLesson img {
+    width: 100%; /* Make the image fill the width of the container */
+    height: 150px; /* Make the image fill the height of the container */
+    object-fit: contain;
 }

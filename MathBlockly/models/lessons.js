@@ -12,7 +12,11 @@ const lessonSchema = new mongoose.Schema({
   },
 
   time:{
-    time: String}
+    type: String},
+
+  picture: {
+    type: String
+  }
 });
 
 const Lesson = mongoose.model('Lesson', lessonSchema);

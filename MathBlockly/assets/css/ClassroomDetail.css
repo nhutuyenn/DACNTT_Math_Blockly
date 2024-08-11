@@ -26,7 +26,7 @@
 
 .user-details-container {
     z-index: 100;
-    right: 155px;
+    right: 50px;
     bottom: -25px;
     display: none;
 }

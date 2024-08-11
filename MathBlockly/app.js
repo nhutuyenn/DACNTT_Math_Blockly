@@ -34,6 +34,7 @@ const AccountModel = require('./models/accountDetail');
 const response = require('./models/response');
 
 const bodyParser = require('body-parser');
+const { debug } = require('console');
 //const PORT = process.env.PORT
 const app = express();
 
@@ -265,7 +266,6 @@ app.post('/HistoryPage/:id', async (req, res) => {
 
     var results;
 
-    console.log(findLesson);
     if (findLesson)
         results = await ResultModel.find({ accountID: id, lessonName: findLesson });
     else
@@ -336,7 +336,6 @@ app.get('/ReviewPage/:id', async (req, res) => {
     } catch (err) {
         return res.status(401).send({ error: 'Invalid token' });
     }
-    console.log(results);
     res.render('ReviewPage', { results, userId, lessons, questions, answers });
 })
 
@@ -346,7 +345,7 @@ app.post('/ReviewPage/:id', async (req, res) => {
 })
 
 
-app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
+app.get('/AnalyzePage/:userId', async (req, res) => {
     const token = req.cookies.jwt;
 
     if (!token) {
@@ -362,8 +361,7 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
     }
 
     const typeofLesson = req.query.type || "Số học";
-    const timeRange = req.query.time || '14d';  // Ensure this matches the query parameter
-
+    const timeRange = req.query.time  // Ensure this matches the query parameter
     // Parse time range
     const endDate = new Date();
     let startDate;
@@ -390,14 +388,22 @@ app.get('/AnalyzePage/:userId', authenticateToken, async (req, res) => {
             break;
         default:
             startDate = new Date();
-            startDate.setMonth(endDate.getMonth() - 1);
+            startDate.setMonth(endDate.getMonth() - 12);
             break;
     }
 
-    const results = await ResultModel.find({
-        accountID: userId,
-        createAt: { $gte: startDate, $lt: endDate }
-    });
+    let results;
+
+    if (timeRange === 'all' || timeRange === undefined) {
+        results = await ResultModel.find({
+            accountID: userId});
+    }
+    else {
+        results = await ResultModel.find({
+            accountID: userId,
+            createAt: { $gte: startDate, $lt: endDate }
+        });
+    }
     const totalDuration = await calculateTotalDuration(results);
     const correct = await totalCorrect(results);
     let lessons;
