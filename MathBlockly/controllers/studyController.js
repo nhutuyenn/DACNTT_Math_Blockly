@@ -9,6 +9,7 @@ const ResultModel = require('../models/result');
 const QuestionModel = require('../models/questions');
 const AnswerModel = require('../models/answers');
 const UserModel = require('../models/User');
+const LessonAnswerModel = require('../models/lessonAnswer');
 
 const jwt = require('jsonwebtoken');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,9 +18,9 @@ app.use(cookieParser());
 
 module.exports = {
     study_get: async (req, res) => {
-        const lesson = await Lesson.find();
-        const question = await Question.find();
-        const answer = await Answer.find();
+        const lesson = await LessonModel.find();
+        const question = await QuestionModel.find();
+        const answer = await AnswerModel.find();
         console.log(lesson);
         console.log(question.direction);
         console.log(answer.answer);
@@ -31,13 +32,17 @@ module.exports.getStudyPage = async (req, res) => {
     const id = req.params.id;
     const lessons = await LessonModel.find({ _id: id });
     const questions = await QuestionModel.find({ lessonID: id });
-    const answers = await AnswerModel.find({ lessonID: id });
+    const lessonAnswers = await LessonAnswerModel.find({
+        lessonID: lessons[0]._id});
+
+    const answer = lessonAnswers.map(lessonAnswer => lessonAnswer.answerID);
+    const answers = await AnswerModel.find({
+        _id: { $in: answer }
+    });
 
     const token = req.cookies.jwt;
     const userID = jwt.verify(token, 'secret').id;
-    console.log(userID);
     const user = await UserModel.find({ _id: userID });
-    console.log("user: " + user);
     if (user[0].active === false || user[0].active === undefined) {
         return res.redirect('/UserDetails');
     }
@@ -84,13 +89,13 @@ module.exports.postStudyPage = async (req, res) => {
 
     const date = new Date()
     date.setTime(date.getTime() + 420 * 60000)
+
     var timeLesson = lessons[0].time.toString();
     timeLesson = timeLesson.split(' : ')
-
-    timeLesson = timeLesson[0] * 3600 + timeLesson[1] * 60 + timeLesson[2]
+    timeLesson = parseInt(timeLesson[0]) * 3600 + parseInt(timeLesson[1]) * 60 + parseInt(timeLesson[2])
 
     countdownValue = countdownValue.split(' : ')
-    countdownValue = countdownValue[0] * 3600 + countdownValue[1] * 60 + countdownValue[2]
+    countdownValue = parseInt(countdownValue[0]) * 3600 + parseInt(countdownValue[1]) * 60 + parseInt(countdownValue[2]);
 
     const resultSecond = timeLesson - countdownValue;
     var resultTime = new Date(0);

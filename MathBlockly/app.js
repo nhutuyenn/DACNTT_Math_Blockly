@@ -8,8 +8,7 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
-const { handleError } = require('./controllers/authController');
-const { checkUser, authenticateToken } = require('./middlewares/authMiddlewares');
+const { checkUser} = require('./middlewares/authMiddlewares');
 const {
     calculateTotalDuration,
     totalCorrect,
@@ -24,18 +23,11 @@ const jwt = require('jsonwebtoken');
 const { MONGO_URL } = process.env;
 
 const LessonModel = require('./models/lessons');
-const QuestionModel = require('./models/questions');
-const AnswerModel = require('./models/answers');
 const ResultModel = require('./models/result');
-const ValidationModel = require('./models/validation');
 const ClassroomModel = require('./models/classroom')
 const UserModel = require('./models/User');
-const AccountModel = require('./models/accountDetail');
-const response = require('./models/response');
 
 const bodyParser = require('body-parser');
-const { debug } = require('console');
-//const PORT = process.env.PORT
 const app = express();
 
 let error = "";
@@ -149,88 +141,7 @@ app.post('/reset/:email', async (req, res) => {
         res.render('ResetPassword', { email: req.params.email, error: 'Mật khẩu phải có tối thiểu 6 kí tự' });
     }
 });
-/*
-app.get('/StudyPage/:id', async (req, res) => {
-    const id = req.params.id;
-    const lessons = await LessonModel.find({ _id: id });
-    const questions = await QuestionModel.find({ lessonID: id });
-    const answers = await AnswerModel.find({ lessonID: id });
 
-    const token = req.cookies.jwt;
-    const userID = jwt.verify(token, 'secret').id;
-    const user = await UserModel.find({ _id: userID });
-    if (user[0].active === false || user[0].active === undefined) {
-        return res.redirect('/UserDetails');
-    }
-
-    res.render('StudyPage', { lessons, questions, answers });
-})
-
-app.post('/StudyPage/:id', async (req, res) => {
-    const id = req.params.id;
-    var countdownValue = req.body.countdownValue;
-    const lessons = await LessonModel.find({ _id: id });
-    let score = 0;
-
-    try {
-        const validations = await ValidationModel.find();
-        const objects = JSON.parse(req.body.answerinput);
-
-        validations.forEach((validation) => {
-            // Compare questionID
-            if (objects.hasOwnProperty(validation.questionID.toString())) {
-                // Compare answerID
-                const answerIDs = validation.answerID;
-                const objectAnswerIDs = objects[validation.questionID.toString()].trim().split(' ');
-                if (answerIDs.length === objectAnswerIDs.length) {
-                    for (let i = 0; i < answerIDs.length; i++) {
-                        if (answerIDs[i] !== objectAnswerIDs[i]) {
-                            break;
-                        }
-                        else if (i === answerIDs.length - 1) {
-                            if (answerIDs[i] === objectAnswerIDs[i]) {
-                                score++;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
-    }
-
-    const token = req.cookies.jwt;
-    const userID = jwt.verify(token, 'secret').id;
-
-    const date = new Date()
-    date.setTime(date.getTime() + 420 * 60000)
-    var timeLesson = lessons[0].time.toString();
-    timeLesson = timeLesson.split(' : ')
-
-    timeLesson = timeLesson[0] * 3600 + timeLesson[1] * 60 + timeLesson[2]
-
-    countdownValue = countdownValue.split(' : ')
-    countdownValue = countdownValue[0] * 3600 + countdownValue[1] * 60 + countdownValue[2]
-
-    const resultSecond = timeLesson - countdownValue;
-    var resultTime = new Date(0);
-    resultTime.setSeconds(resultSecond);
-    resultTime = resultTime.toISOString().substring(11, 19).replace(/:/g, ' : ');
-
-    const result = new ResultModel({
-        lessonID: id,
-        lessonName: lessons[0].name,
-        accountID: userID,
-        score: score,
-        time: resultTime,
-        createAt: date
-    });
-    await result.save();
-    res.redirect('/HistoryPage');
-})
-*/
 app.get('/HistoryPage', async (req, res) => {
     const token = req.cookies.jwt;
     const userID = jwt.verify(token, 'secret').id;
@@ -257,20 +168,28 @@ app.get('/HistoryPage/:id/:page?', async (req, res) => {
     res.render('HistoryPage', { results, page, totalPages, id });
 })
 
-app.post('/HistoryPage/:id', async (req, res) => {
+app.post('/HistoryPage/:id/:page?', async (req, res) => {
     const token = req.cookies.jwt;
     const userID = jwt.verify(token, 'secret').id;
     const id = req.params.id;
     const findLesson = req.body.findLesson;
+    const page = parseInt(req.params.page) || 1;
+    const pageSize = 10;
+    const skip = (page - 1) * pageSize;
     const user = await UserModel.find({ _id: userID });
 
     var results;
 
     if (findLesson)
-        results = await ResultModel.find({ accountID: id, lessonName: findLesson });
+        results = await ResultModel.find({ accountID: id, lessonName: findLesson })
+                                    .skip(skip)
+                                    .limit(pageSize)
+                                    .exec();
     else
         results = await ResultModel.find({ accountID: id });
-    res.render('HistoryPage', { results, user });
+    const totalResults = await ResultModel.countDocuments({ accountID: id }).exec();
+    const totalPages = Math.ceil(totalResults / pageSize);
+    res.render('HistoryPage', {user, results, page, totalPages, id });
 })
 
 app.post('/Search', async (req, res) => {
@@ -317,34 +236,6 @@ app.post('/LessonPage', async (req, res) => {
     res.redirect('/StudyPage/' + lessonInput);
 })
 
-app.get('/ReviewPage/:id', async (req, res) => {
-    const id = req.params.id;
-    const lessons = await LessonModel.find({ _id: id });
-    const questions = await QuestionModel.find({ lessonID: id });
-    const answers = await AnswerModel.find({ lessonID: id });
-    const results = await ResultModel.find({ lessonID: id });
-    const token = req.cookies.jwt;
-
-    if (!token) {
-        return res.status(401).send({ error: 'No token provided' });
-    }
-
-    let userId;
-    try {
-        const decoded = jwt.verify(token, 'secret');
-        userId = decoded.id;
-    } catch (err) {
-        return res.status(401).send({ error: 'Invalid token' });
-    }
-    res.render('ReviewPage', { results, userId, lessons, questions, answers });
-})
-
-app.post('/ReviewPage/:id', async (req, res) => {
-    const { lessonInput } = req.body;
-    res.redirect('/ReviewPage');
-})
-
-
 app.get('/AnalyzePage/:userId', async (req, res) => {
     const token = req.cookies.jwt;
 
@@ -363,7 +254,9 @@ app.get('/AnalyzePage/:userId', async (req, res) => {
     const typeofLesson = req.query.type || "Số học";
     const timeRange = req.query.time  // Ensure this matches the query parameter
     // Parse time range
-    const endDate = new Date();
+    const offset = 7; // Vietnam is UTC+7
+    const now = new Date();
+    const endDate = new Date(now.getTime() + (offset * 60 * 60 * 1000));
     let startDate;
     switch (timeRange) {
         case '1d':
@@ -406,7 +299,9 @@ app.get('/AnalyzePage/:userId', async (req, res) => {
     }
     const totalDuration = await calculateTotalDuration(results);
     const correct = await totalCorrect(results);
+
     let lessons;
+
     if (typeofLesson === 'all') {
         lessons = await LessonModel.find();
     } else {
@@ -418,6 +313,12 @@ app.get('/AnalyzePage/:userId', async (req, res) => {
         lessonID: { $in: lessonIds },
         createAt: { $gte: startDate, $lt: endDate }
     });
+
+    const tmp = await ResultModel.find({
+        accountID: userId,
+        lessonID: { $in: lessonIds }
+    });
+
     // const resultSorted = [...resultSorted1].reverse();
     const totalLessonsLearned = await getTotalLessonsByType(userId, typeofLesson, { startDate, endDate });
     const accuracy = await calculateAccuracy(userId, typeofLesson, { startDate, endDate });
@@ -495,18 +396,19 @@ app.get('/UserDetails', async (req, res) => {
 })
 
 app.post('/UserDetails', async (req, res) => {
-    const { id, fullname, email, phone, birthday, school } = req.body;
-    if (fullname === '' || email === '' || phone === '' || birthday === '' || school === '') {
+    const { id, fullName, email, phone, birthday, school } = req.body;
+    if (fullName === '' || email === '' || phone === '' || birthday === '' || school === '') {
         error = "Hãy nhập tất cả các thông tin cần thiết"
         const user = await UserModel.find({ _id: id });
         return res.render('UserDetails', { user, error });
     }
+
     await UserModel.updateOne({ _id: id }, {
         $set: {
-            name: fullname,
+            name: fullName,
             email: email,
             phone: phone,
-            birthday: birthday,
+            dateBirth: birthday,
             school: school,
             active: true
         }

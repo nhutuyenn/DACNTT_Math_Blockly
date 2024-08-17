@@ -3,9 +3,7 @@ const { Schema } = mongoose;
 
 const classroomSchema = new mongoose.Schema({
   teacherID: {
-    type: Schema.Types.ObjectId,
-    required: [true, 'Username is required'],
-    unique: [ true, 'Username already exists'],
+    type: Schema.Types.ObjectId
   },
 
   teacherName: {
